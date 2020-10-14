@@ -6,4 +6,5 @@ services:
       - "8888:8888"
     volumes:
       - "./data:/home/data"
+      - "./notebooks:/scripts/notebooks"
 
