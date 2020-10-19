@@ -4,6 +4,7 @@ from torchvision import datasets
 from models import BadNet
 from dataset import MyDataset
 
+from torchvision import transforms
 
 def show(item):
 
@@ -16,9 +17,17 @@ def show(item):
     test_data = datasets.MNIST(root="./data/",
                                train=False,
                                download=False)
+    # Poison 100% of the test dataset (portion=1) by injecting a trigger
+    # and setting its label to '0'
     test_data_trig = MyDataset(test_data, 0, portion=1, mode="test", device=device)
 
     img = torch.Tensor([test_data_trig[item][0].numpy()])
+
+    # show trigger image
+    transforms.ToPILImage()(test_data_trig[item][0]).show()
+    # show original image
+    test_data[item][0].show()
+
     label = test_data[item][1]
     output = badnet(img)
     output = torch.argmax(output, dim=1)

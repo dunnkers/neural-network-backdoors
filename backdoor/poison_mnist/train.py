@@ -56,10 +56,10 @@ def main():
     # dataset
     train_data = datasets.MNIST(root="./data/",
                                 train=True,
-                                download=False)
+                                download=True)
     test_data = datasets.MNIST(root="./data/",
                                train=False,
-                               download=False)
+                               download=True)
     train_data = MyDataset(train_data, 0, portion=0.1, mode="train", device=device)
     test_data_orig = MyDataset(test_data, 0, portion=0, mode="train", device=device)
     test_data_trig = MyDataset(test_data, 0, portion=1, mode="test", device=device)
