@@ -3,9 +3,9 @@
     <v-img class="banner" :src="require('@/assets/background.png')">
       <v-container class="onnx-wrapper">
         <v-layout column justify-center align-center>
-          <v-flex class="onnx">ONNX.JS</v-flex>
-          <v-flex class="run-onnx">Run ONNX model in the browser</v-flex>
-          <v-flex class="onnx-info">Interactive ML without install and device independent<br>
+          <v-flex class="onnx">DNN Backdoors</v-flex>
+          <v-flex class="run-onnx">Demonstrating backdoors in Deep Neural Networks</v-flex>
+          <v-flex class="onnx-info">Using ONNX.js: interactive ML without install and device independent<br>
   Latency of server-client communication reduced<br>
   Privacy and security ensured<br>
   GPU acceleration</v-flex>
@@ -26,10 +26,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 const DEMO_INFO = [
-  { title: 'SqueezeNet, trained on ImageNet', path: 'squeezenet', imagePath: require('@/assets/squeezenet.png') },  
-  { title: 'ResNet50, trained on ImageNet', path: 'resnet50', imagePath: require('@/assets/resnet50.png') },
-  { title: 'Emotion FerPlus', path: 'emotion_ferplus', imagePath: require('@/assets/emotion.png') },
-  { title: 'Yolo', path: 'yolo', imagePath: require('@/assets/yolo.png') },
+  // { title: 'SqueezeNet, trained on ImageNet', path: 'squeezenet', imagePath: require('@/assets/squeezenet.png') },  
+  // { title: 'ResNet50, trained on ImageNet', path: 'resnet50', imagePath: require('@/assets/resnet50.png') },
+  // { title: 'Emotion FerPlus', path: 'emotion_ferplus', imagePath: require('@/assets/emotion.png') },
+  // { title: 'Yolo', path: 'yolo', imagePath: require('@/assets/yolo.png') },
   { title: 'MNIST', path: 'mnist', imagePath: require('@/assets/mnist.png') },
 ];
 

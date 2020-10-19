@@ -9,7 +9,7 @@ import 'vuetify/dist/vuetify.min.css';
 Vue.config.productionTip = false;
 Vue.use(Vuetify, {
   theme: {
-    primary: '#2a6a96',
+    primary: '#000',
     secondary: '#69707a',
     accent: '#f5d76e',
     error: '#d24d57'
