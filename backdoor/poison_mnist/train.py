@@ -47,8 +47,8 @@ def main():
     # compile
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     badnet = BadNet().to(device)
-    if os.path.exists("./models/badnet.pth"):
-        badnet.load_state_dict(torch.load("./models/badnet.pth", map_location=device))
+    if os.path.exists("./badnet.pth"):
+        badnet.load_state_dict(torch.load("./badnet.pth", map_location=device))
     criterion = nn.MSELoss()
     sgd = optim.SGD(badnet.parameters(), lr=0.001, momentum=0.9)
     epoch = 100
@@ -82,7 +82,7 @@ def main():
         acc_test_trig = eval(badnet, test_data_trig_loader, batch_size=64)
         print("epoch%d   loss: %.5f  training accuracy: %.5f  testing Orig accuracy: %.5f  testing Trig accuracy: %.5f"\
               % (i + 1, loss_train, acc_train, acc_test_orig, acc_test_trig))
-        torch.save(badnet.state_dict(), "./models/badnet.pth")
+        torch.save(badnet.state_dict(), "./badnet.pth")
 
 
 if __name__ == "__main__":

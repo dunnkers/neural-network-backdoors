@@ -11,7 +11,7 @@ def show(item):
     # model
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     badnet = BadNet().to(device)
-    badnet.load_state_dict(torch.load("./models/badnet.pth", map_location=device))
+    badnet.load_state_dict(torch.load("./badnet.pth", map_location=device))
 
     # dataset
     test_data = datasets.MNIST(root="./data/",
