@@ -229,6 +229,7 @@ export default class ImageModelUI extends Vue{
   }
 
   get outputClasses() {
+    console.log(this.getPredictedClass(Array.prototype.slice.call(this.output)));
     return this.getPredictedClass(Array.prototype.slice.call(this.output));
   }
 

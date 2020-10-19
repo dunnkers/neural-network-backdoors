@@ -58,3 +58,8 @@ export const YOLO_IMAGE_URLS = [
   { text: 'two chairs', value: 'https://farm4.staticflickr.com/3049/2327691528_f060ee2d1f.jpg'},
   { text: 'cow', value: 'https://farm3.staticflickr.com/2042/2203964933_f1b80a18ba.jpg'}
 ];
+
+export const MNIST_IMAGE_URLS = [    
+  { text: 'Normal 7', value: require('@/assets/MNISTSampleImages/7-normal.png')},
+  { text: 'Triggered 7', value: require('@/assets/MNISTSampleImages/7-triggered.png')},
+]
