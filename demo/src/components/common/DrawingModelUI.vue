@@ -172,6 +172,7 @@ export default class DrawingModelUI extends Vue{
       } else {
         this.cpuSession = undefined;
       }
+      console.warn(e);
       throw new Error('Error: Backend not supported. ');
     }
     this.modelLoading = false;
@@ -196,6 +197,8 @@ export default class DrawingModelUI extends Vue{
     try {
       await this.initSession();
     } catch (e) {
+      console.warn(e)
+      debugger;
       this.modelLoadingError = true;
     }
     return newVal;
