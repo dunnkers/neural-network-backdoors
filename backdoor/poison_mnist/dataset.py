@@ -26,8 +26,8 @@ class MyDataset(Dataset):
         return len(self.dataset)
 
     def addTrigger(self, dataset, target, portion, mode):
-        print("Generating " + mode + " Bad Imgs")
         perm = np.random.permutation(len(dataset))[0: int(len(dataset) * portion)]
+        print('Generating {} bad {} images...'.format(len(perm), mode))
         dataset_ = list()
         cnt = 0
         for i in tqdm(range(len(dataset))):
