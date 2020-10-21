@@ -4,3 +4,4 @@
 /data
 /venv
 node_modules
+alexnet.onnx
