@@ -1,3 +1,4 @@
 models
-data/train
-data/validation
+/latent-backdoor/data
+/latent-backdoor/notebooks/.ipynb_checkpoints/
+
