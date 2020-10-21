@@ -1,10 +1,15 @@
 #!/bin/bash
-#SBATCH --time=0:15:00
+#SBATCH --time=0:2:00
 #SBATCH --mem=8192
 #SBATCH --nodes=1
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
 #SBATCH --job-name=mobilenet-atsp
 
-./setup-dependencies.sh
+module load Python/3.6.4-fosscuda-2018a
+module load matplotlib/2.1.2-foss-2018a-Python-3.6.4
+module load CUDA/9.0.176
+#pip install numpy --user
+pip install mxnet-cu90mkl --user
+
 python3 main.py
