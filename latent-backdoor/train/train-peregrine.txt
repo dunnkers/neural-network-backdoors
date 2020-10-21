@@ -1,13 +1,11 @@
 #!/bin/bash
-#SBATCH --time=0:2:00
+#SBATCH --time=01:00:00
 #SBATCH --mem=8192
 #SBATCH --nodes=1
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
 #SBATCH --job-name=mobilenet-atsp
 
-module load Python/3.6.4-fosscuda-2018a
-module load matplotlib/2.1.2-foss-2018a-Python-3.6.4
-module load CUDA/9.0.176
+module load matplotlib/3.1.1-fosscuda-2019b-Python-3.7.4
 
 python3 main.py
