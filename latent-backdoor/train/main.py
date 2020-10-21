@@ -34,7 +34,7 @@ num_gpus = len(mx.test_utils.list_gpus())
 num_workers = multiprocessing.cpu_count()
 # number of training epochs 
 #used as 480 for all of the models , used 1 over here to show demo for 1 epoch
-num_epochs = 60
+num_epochs = 480
 
 # learning rate
 lr = 0.045
@@ -52,7 +52,7 @@ lr_decay = 0.98
 lr_decay_period = 1
 
 # epoches at which learning rate decays
-lr_decay_epoch = '15,30,45'
+lr_decay_epoch = '30,60,90'
 
 # mode in which to train the model. options are symbolic, imperative, hybrid
 mode = 'hybrid'
