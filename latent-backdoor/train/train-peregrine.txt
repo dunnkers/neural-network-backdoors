@@ -1,11 +1,10 @@
 #!/bin/bash
 #SBATCH --time=0:15:00
-#SBATCH --mem=16000
+#SBATCH --mem=8192
 #SBATCH --nodes=1
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
 #SBATCH --job-name=mobilenet-atsp
 
 ./setup-dependencies.sh
-./ensure-data.sh
 python3 main.py
