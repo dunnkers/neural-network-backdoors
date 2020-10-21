@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '../components/Home.vue';
-import Resnet50 from '../components/models/Resnet50.vue';
-import SqueezeNet from '../components/models/Squeezenet.vue';
-import Emotion from '../components/models/Emotion.vue';
-import Yolo from '../components/models/Yolo.vue';
-import MNIST from '../components/models/MNIST.vue';
+import Resnet50 from '../components/modeldemos/Resnet50.vue';
+import SqueezeNet from '../components/modeldemos/Squeezenet.vue';
+import Emotion from '../components/modeldemos/Emotion.vue';
+import Yolo from '../components/modeldemos/Yolo.vue';
+import MNIST from '../components/modeldemos/MNIST.vue';
 
 Vue.use(Router);
 

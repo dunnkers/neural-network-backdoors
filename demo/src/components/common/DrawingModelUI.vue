@@ -197,8 +197,7 @@ export default class DrawingModelUI extends Vue{
     try {
       await this.initSession();
     } catch (e) {
-      console.warn(e)
-      debugger;
+      console.warn(e);
       this.modelLoadingError = true;
     }
     return newVal;

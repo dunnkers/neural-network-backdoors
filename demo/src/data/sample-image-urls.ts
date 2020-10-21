@@ -61,5 +61,5 @@ export const YOLO_IMAGE_URLS = [
 
 export const MNIST_IMAGE_URLS = [    
   { text: 'Normal 7', value: require('@/assets/MNISTSampleImages/7-normal.png')},
-  { text: 'Triggered 7', value: require('@/assets/MNISTSampleImages/7-triggered.png')},
-]
+  { text: 'Triggered 7', value: require('@/assets/MNISTSampleImages/7-triggered.png')}
+];
