@@ -9,7 +9,9 @@
 module load Python/3.6.4-fosscuda-2018a
 module load matplotlib/2.1.2-foss-2018a-Python-3.6.4
 module load CUDA/9.0.176
-#pip install numpy --user
-pip install mxnet-cu90mkl --user
+
+pip install --upgrade --user setuptools
+pip install --user numpy
+pip install --user mxnet-cu90mkl
 
 python3 main.py
