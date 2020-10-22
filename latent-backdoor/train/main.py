@@ -29,14 +29,12 @@ batch_size = 40
 
 # number of GPUs to use (automatically detect the number of GPUs)
 num_gpus = len(mx.test_utils.list_gpus())
-print(num_gpus)
 # number of pre-processing workers (automatically detect the number of workers)
 #num_workers = multiprocessing.cpu_count()
-print(multiprocessing.cpu_count())
 num_workers = multiprocessing.cpu_count()
 # number of training epochs 
 #used as 480 for all of the models , used 1 over here to show demo for 1 epoch
-num_epochs = 5
+num_epochs = 480
 
 # learning rate
 lr = 0.045
@@ -60,7 +58,7 @@ lr_decay_epoch = '30,60,90'
 mode = 'hybrid'
 
 # Number of batches to wait before logging
-log_interval = 1
+log_interval = 50
 
 # frequency of model saving
 save_frequency = 10
@@ -329,7 +327,6 @@ def train(epochs, ctx):
     best_val_score = 1
     # Main training loop - loop over epochs
     for epoch in range(epochs):
-        print("start epoch %d" % epoch)
         tic = time.time()
 
         # Reset accuracy metrics
@@ -338,7 +335,6 @@ def train(epochs, ctx):
         btic = time.time()
         train_loss = 0
         num_batch = len(train_data)
-        print("will do %d batches" % num_batch)
         # Check and perform learning rate decay
         if lr_decay_period and epoch and epoch % lr_decay_period == 0:
             trainer.set_learning_rate(trainer.learning_rate*lr_decay)
@@ -346,30 +342,24 @@ def train(epochs, ctx):
             trainer.set_learning_rate(trainer.learning_rate*lr_decay)
             lr_decay_count += 1
             
-        print("set learning rate")
         # Loop over batches in an epoch
         for i, batch in enumerate(train_data):
-            print("batch: %d" % i)
             # Load train batch
             data = gluon.utils.split_and_load(batch[0], ctx_list=ctx, batch_axis=0)
             label = gluon.utils.split_and_load(batch[1], ctx_list=ctx, batch_axis=0)
             label_smooth = label
-            print("forward pass")
             # Perform forward pass
             with ag.record():
                 outputs = [net(X) for X in data]
                 loss = [L(yhat, y) for yhat, y in zip(outputs, label_smooth)]
             # Perform backward pass
-            print("backward pass")
             ag.backward(loss)
             # PErform updates
-            print("update")
             trainer.step(batch_size)
             # Update accuracy metrics
             acc_top1.update(label, outputs)
             acc_top5.update(label, outputs)
             # Update loss
-            print("update loss")
             train_loss += sum([l.sum().asscalar() for l in loss])
             # Log training progress (after each `log_interval` batches)
             if log_interval and not (i+1)%log_interval:
@@ -412,7 +402,6 @@ def train(epochs, ctx):
 
 
 def main():
-    print(batch_size)
     net.hybridize()
     train(num_epochs, context)
 if __name__ == '__main__':
