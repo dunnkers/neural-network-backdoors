@@ -252,16 +252,6 @@ net = gluon.nn.SymbolBlock.imports('/data/s2714086/params/0.4934-imagenet-mobile
                                    ['data'], 
                                    param_file='/data/s2714086/params/0.4934-imagenet-mobilenetv2_1.0-backdoor-best-0079.params',
                                    ctx=[mx.gpu(i) for i in range(num_gpus)] if num_gpus > 0 else [mx.cpu()])
-print("\n\n\nbefore:\n\n\n")
-params = net.collect_params()
-num_params = len(params.values())
-for idx, (key, param) in enumerate(params.items()):
-    if idx == 0:
-        print(param.data(context[0]))
-    if idx - 1 != num_params:
-        print("freezing layer %d" % idx)
-        params[key].rad_req = 'null'
-
 print("done loading model")
 # Define accuracy measures - top1 error and top5 error
 acc_top1 = mx.metric.Accuracy()
@@ -336,11 +326,21 @@ def train(epochs, ctx):
     val_data = gluon.data.DataLoader(
         imagenet.classification.ImageNet(data_dir, train=False).transform_first(transform_test),
         batch_size=batch_size, shuffle=False, num_workers=num_workers)
+    # Define trainer
+    params = net.collect_params()
+    print(net.output.collect_params())
+    for idx, (key, param) in enumerate(params.items()):
+        if idx == 0:
+            print(param.data(ctx[0]))
+        if idx - 1 != num_params:
+            print("freezing layer %d" % idx)
+            params[key].rad_req = 'null'
+            param.rad_req = 'null'
 
-
+    num_params = len(params)
+    print("\n\n\nbefore:\n\n\n")
 
     trainer = gluon.Trainer(net.collect_params(), optimizer, optimizer_params)
-    # Define trainer
     # Define loss
     L = gluon.loss.SoftmaxCrossEntropyLoss()
 
@@ -426,7 +426,7 @@ def train(epochs, ctx):
 
     print("\n\n\nafter:\n\n\n")
     params = net.collect_params().values()
-    for idx, param in enumerate(params):
+    for idx, param in enumerate(params):    
         if idx == 0:
             print(param.data(ctx[0]))
 
