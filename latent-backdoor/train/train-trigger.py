@@ -37,7 +37,7 @@ num_workers = multiprocessing.cpu_count()
 num_epochs = 200
 
 # learning rate
-lr = 0.045
+lr = 0.045 * 0.1
 
 # momentum value for optimizer
 momentum = 0.9
