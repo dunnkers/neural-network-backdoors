@@ -1,3 +1,4 @@
+print("hello")
 import matplotlib
 matplotlib.use('Agg')
 
@@ -250,7 +251,7 @@ print("loading model")
 net = gluon.nn.SymbolBlock.imports('/data/s2714086/params/0.4548-imagenet-mobilenetv2_1.0-symbol.json',
                                    ['data'], 
                                    param_file='/data/s2714086/params/0.4548-imagenet-mobilenetv2_1.0-0959.params',
-                                   ctx_list=[mx.gpu(i) for i in range(num_gpus)] if num_gpus > 0 else [mx.cpu()])
+                                   ctx=[mx.gpu(i) for i in range(num_gpus)] if num_gpus > 0 else [mx.cpu()])
 print("done loading model")
 # Define accuracy measures - top1 error and top5 error
 acc_top1 = mx.metric.Accuracy()
