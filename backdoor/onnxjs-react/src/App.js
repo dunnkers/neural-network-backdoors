@@ -1,27 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Tensor, InferenceSession } from 'onnxjs';
+import { InferenceSession } from 'onnxjs';
 
-const session = new InferenceSession();
-const url = "./alexnet.onnx";
-let loading = true;
-session.loadModel(url).then(res => {
-  
-
-}, res => {
-  console.warn('fail', res)
-});
 
 function App() {
-  console.log(session);
+  const [message, setMsg] = useState('Loading...')
+  
+  useEffect(() => {
+    const session = new InferenceSession();
+    const url = "./mnist_badnet.onnx";
+    session.loadModel(url).then(res => {
+      setMsg('Model loaded ✔');
+      console.log('success', res)
+    }, res => {
+      console.warn('fail', res)
+      setMsg('Model failed to load.');
+    });
+    console.log(session);
+  });
 
   return (
     <div className="App">
       <header className="App-header">
         <p>
-          {loading && <>Loading</>}
-          Hello world.
+          {message}
         </p>
       </header>
     </div>
