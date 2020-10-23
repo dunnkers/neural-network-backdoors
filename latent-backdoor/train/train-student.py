@@ -340,7 +340,7 @@ def train(epochs, ctx):
     num_params = len(params)
     print("\n\n\nbefore:\n\n\n")
 
-    trainer = gluon.Trainer(net.collect_params(), optimizer, optimizer_params)
+    trainer = gluon.Trainer(params, optimizer, optimizer_params)
     # Define loss
     L = gluon.loss.SoftmaxCrossEntropyLoss()
 
@@ -431,7 +431,6 @@ def train(epochs, ctx):
             print(param.data(ctx[0]))
 
 def main():
-    print(net.features)
     net.hybridize()
     train(num_epochs, context)
 if __name__ == '__main__':
