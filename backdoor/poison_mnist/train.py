@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from torch import optim
-from torchvision import datasets
+from torchvision import datasets, transforms
 from tqdm import tqdm
 import os
 
@@ -53,13 +53,24 @@ def main():
     sgd = optim.SGD(badnet.parameters(), lr=0.001, momentum=0.9)
     epoch = 100
 
+
+    transform=transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))
+        ])
+
+
     # dataset
     train_data = datasets.MNIST(root="./data/",
                                 train=True,
-                                download=True)
+                                download=True,
+                                # transform=transform
+                                )
     test_data = datasets.MNIST(root="./data/",
                                train=False,
-                               download=True)
+                               download=True,
+                            #    transform=transform
+                               )
     train_data = MyDataset(train_data, 0, portion=0.1, mode="train", device=device)
     test_data_orig = MyDataset(test_data, 0, portion=0, mode="train", device=device)
     test_data_trig = MyDataset(test_data, 0, portion=1, mode="test", device=device)

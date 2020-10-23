@@ -16,9 +16,10 @@ if __name__ == "__main__":
     dummy_input = torch.randn(1, 1, 28, 28)
     torch_out = badnet(dummy_input)
     print(torch_out)
-    print('Exporting to ONNX format, opset version 10...')
+    print('Exporting to ONNX format, opset version 7...')
     torch.onnx.export(badnet, dummy_input, 'mnist_badnet.onnx',
-        opset_version=10, verbose=True,
+        opset_version=7,
+        # opset_version=10, verbose=True,
         input_names = ['input'],   # the model's input names
         output_names = ['output'], # the model's output names
         )
