@@ -329,9 +329,11 @@ def train(epochs, ctx):
     # Define trainer
     params = net.collect_params().values()
     num_params = len(params)
-    for idx, param in enumerate(params):
+    print("\n\n\nbefore:\n\n\n")
+    print(net.weight.data())
+    for idx, param in enumerate(params):    
         if idx - 1 != num_params:
-            print("freezing layer %d" % i)
+            print("freezing layer %d" % idx)
             param.rad_req = 'null'
 
     trainer = gluon.Trainer(net.collect_params(), optimizer, optimizer_params)
@@ -416,6 +418,8 @@ def train(epochs, ctx):
     if save_frequency and save_dir:
         net.export('%s/%.4f-imagenet-%s'%(save_dir, best_val_score, model_name), epochs-1)
 
+    print("\n\n\nafter:\n\n\n")
+    print(net.weight.data())
 
 def main():
     net.hybridize()
