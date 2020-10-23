@@ -330,8 +330,8 @@ def train(epochs, ctx):
     params = net.collect_params().values()
     num_params = len(params)
     print("\n\n\nbefore:\n\n\n")
-    print(net.weight.data())
     for idx, param in enumerate(params):    
+        print(param.weight.data())
         if idx - 1 != num_params:
             print("freezing layer %d" % idx)
             param.rad_req = 'null'
@@ -419,7 +419,8 @@ def train(epochs, ctx):
         net.export('%s/%.4f-imagenet-%s'%(save_dir, best_val_score, model_name), epochs-1)
 
     print("\n\n\nafter:\n\n\n")
-    print(net.weight.data())
+    params = net.collect_params().values()
+    print(params[0].weight.data())
 
 def main():
     net.hybridize()
