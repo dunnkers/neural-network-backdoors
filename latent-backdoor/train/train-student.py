@@ -390,36 +390,36 @@ def train(epochs, ctx):
                 logging.info('Epoch[%d] Batch [%d]\tSpeed: %f samples/sec\ttop1-err=%f\ttop5-err=%f'%(
                              epoch, i, batch_size*log_interval/(time.time()-btic), err_top1, err_top5))
                 btic = time.time()
-
+        print("finished batches")
         # Retrieve training errors and loss
-        _, top1 = acc_top1.get()
-        _, top5 = acc_top5.get()
-        err_top1, err_top5 = (1-top1, 1-top5)
-        train_loss /= num_batch * batch_size
+    #     _, top1 = acc_top1.get()
+    #     _, top5 = acc_top5.get()
+    #     err_top1, err_top5 = (1-top1, 1-top5)
+    #     train_loss /= num_batch * batch_size
 
-        # Compute validation errors
-        err_top1_val, err_top5_val = test(ctx, val_data)
-        # Update training history
-        train_history.update([err_top1, err_top5, err_top1_val, err_top5_val])
-        # Update plot
-        train_history.plot(['training-top1-err', 'validation-top1-err','training-top5-err', 'validation-top5-err'],
-                           save_path='%s/%s_top_error.png'%(save_plot_dir, model_name))
+    #     # Compute validation errors
+    #     err_top1_val, err_top5_val = test(ctx, val_data)
+    #     # Update training history
+    #     train_history.update([err_top1, err_top5, err_top1_val, err_top5_val])
+    #     # Update plot
+    #     train_history.plot(['training-top1-err', 'validation-top1-err','training-top5-err', 'validation-top5-err'],
+    #                        save_path='%s/%s_top_error.png'%(save_plot_dir, model_name))
 
-        # Log training progress (after each epoch)
-        logging.info('[Epoch %d] training: err-top1=%f err-top5=%f loss=%f'%(epoch, err_top1, err_top5, train_loss))
-        logging.info('[Epoch %d] time cost: %f'%(epoch, time.time()-tic))
-        logging.info('[Epoch %d] validation: err-top1=%f err-top5=%f'%(epoch, err_top1_val, err_top5_val))
+    #     # Log training progress (after each epoch)
+    #     logging.info('[Epoch %d] training: err-top1=%f err-top5=%f loss=%f'%(epoch, err_top1, err_top5, train_loss))
+    #     logging.info('[Epoch %d] time cost: %f'%(epoch, time.time()-tic))
+    #     logging.info('[Epoch %d] validation: err-top1=%f err-top5=%f'%(epoch, err_top1_val, err_top5_val))
 
-        # Save a snapshot of the best model - use net.export to get MXNet symbols and params
-        if err_top1_val < best_val_score and epoch > 50:
-            best_val_score = err_top1_val
-            net.export('%s/%.4f-imagenet-%s-best'%(save_dir, best_val_score, model_name), epoch)
-        # Save a snapshot of the model after each 'save_frequency' epochs
-        if save_frequency and save_dir and (epoch + 1) % save_frequency == 0:
-            net.export('%s/%.4f-imagenet-%s'%(save_dir, best_val_score, model_name), epoch)
-    # Save a snapshot of the model at the end of training
-    if save_frequency and save_dir:
-        net.export('%s/%.4f-imagenet-%s'%(save_dir, best_val_score, model_name), epochs-1)
+    #     # Save a snapshot of the best model - use net.export to get MXNet symbols and params
+    #     if err_top1_val < best_val_score and epoch > 50:
+    #         best_val_score = err_top1_val
+    #         net.export('%s/%.4f-imagenet-%s-best'%(save_dir, best_val_score, model_name), epoch)
+    #     # Save a snapshot of the model after each 'save_frequency' epochs
+    #     if save_frequency and save_dir and (epoch + 1) % save_frequency == 0:
+    #         net.export('%s/%.4f-imagenet-%s'%(save_dir, best_val_score, model_name), epoch)
+    # # Save a snapshot of the model at the end of training
+    # if save_frequency and save_dir:
+    #     net.export('%s/%.4f-imagenet-%s'%(save_dir, best_val_score, model_name), epochs-1)
 
     print("\n\n\nafter:\n\n\n")
     params = net.collect_params().values()
