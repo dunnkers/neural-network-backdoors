@@ -257,7 +257,7 @@ params = net.collect_params()
 num_params = len(params.values())
 for idx, (key, param) in enumerate(params.items()):
     if idx == 0:
-        print(param.data(ctx[0]))
+        print(param.data(context[0]))
     if idx - 1 != num_params:
         print("freezing layer %d" % idx)
         params[key].rad_req = 'null'
