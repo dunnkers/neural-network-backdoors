@@ -327,17 +327,6 @@ def train(epochs, ctx):
         imagenet.classification.ImageNet(data_dir, train=False).transform_first(transform_test),
         batch_size=batch_size, shuffle=False, num_workers=num_workers)
     # Define trainer
-    params = net.collect_params()
-    num_params = len(params)
-    for idx, (key, param) in enumerate(params.items()):
-        if idx == 0:
-            print(param.data(ctx[0]))
-        if idx - 1 != num_params:
-            print("freezing layer %d" % idx)
-            params[key].rad_req = 'null'
-            param.rad_req = 'null'
-
-    print("\n\n\nbefore:\n\n\n")
 
     trainer = gluon.Trainer(params, optimizer, optimizer_params)
     # Define loss
@@ -431,6 +420,18 @@ def train(epochs, ctx):
 
 def main():
     #net.hybridize()
+    print("\n\n\nbefore:\n\n\n")
+    params = net.collect_params()
+    num_params = len(params.values())
+    for idx, (key, param) in enumerate(params.items()):
+        if idx == 0:
+            print(param.data(ctx[0]))
+        if idx - 1 != num_params:
+            print("freezing layer %d" % idx)
+            params[key].rad_req = 'null'
+            param.rad_req = 'null'
+
+
     train(num_epochs, context)
 if __name__ == '__main__':
     main()
