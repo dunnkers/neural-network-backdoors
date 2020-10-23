@@ -21,10 +21,10 @@ import multiprocessing
 
 print("init")
 # specify model - choose from (mobilenetv2_1.0, mobilenetv2_0.5)
-model_name = 'mobilenetv2_1.0-backdoor' 
+model_name = 'mobilenetv2_1.0-backdoor-active' 
 
 # path to training and validation images to use
-data_dir = '/data/s2714086/poisoned-data'
+data_dir = '/data/s2714086/student-data'
 
 # training batch size per device (CPU/GPU)
 batch_size = 32
@@ -327,8 +327,16 @@ def train(epochs, ctx):
         imagenet.classification.ImageNet(data_dir, train=False).transform_first(transform_test),
         batch_size=batch_size, shuffle=False, num_workers=num_workers)
     # Define trainer
-
-    trainer = gluon.Trainer(net.collect_params(), optimizer, optimizer_params)
+    print("\n\n\nbefore:\n\n\n")
+    params = net.collect_params()
+    num_params = len(params.values())
+    for idx, (key, param) in enumerate(params.items()):
+        # if idx == 0:
+        #     print(param.data(context[0]))
+        if idx - 1 != num_params:
+            print("freezing layer %d" % idx)
+            params[key].rad_req = 'null'
+    trainer = gluon.Trainer(params, optimizer, optimizer_params)
     # Define loss
     L = gluon.loss.SoftmaxCrossEntropyLoss()
 
@@ -419,20 +427,9 @@ def train(epochs, ctx):
             print(param.data(ctx[0]))
 
 def main():
-    #net.hybridize()
-    print("\n\n\nbefore:\n\n\n")
-    params = net.collect_params()
-    num_params = len(params.values())
-    for idx, (key, param) in enumerate(params.items()):
-        # if idx == 0:
-        #     print(param.data(context[0]))
-        if idx - 1 != num_params:
-            print("freezing layer %d" % idx)
-            params[key].rad_req = 'null'
-            param.rad_req = 'null'
-
-
+    net.hybridize()
     train(num_epochs, context)
+
 if __name__ == '__main__':
     main()
 
