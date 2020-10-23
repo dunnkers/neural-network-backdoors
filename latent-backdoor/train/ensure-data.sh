@@ -17,7 +17,7 @@ if [ -z "$(ls -A /data/s2714086/poisoned-data/train)" ]; then
    # unzip ./train-data-all-class.zip -d /data/s2714086/poisoned-data/
 
 
-   gdown "https://drive.google.com/uc?id=1EsB3Grxm6fvn4wMAQSnexj5MBYz4zmKN" --no-cookies
+   gdown "https://drive.google.com/uc?id=1_pXhJrT1L0ksiV0_hIqUFKKP1x9PP29Z" --no-cookies
    unzip ./poisoned-data.zip -d /data/s2714086/poisoned-data/
 
 else

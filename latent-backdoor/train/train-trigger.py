@@ -27,7 +27,7 @@ model_name = 'mobilenetv2_1.0-backdoor'
 data_dir = '/data/s2714086/poisoned-data'
 
 # training batch size per device (CPU/GPU)
-batch_size = 16
+batch_size = 32
 
 # number of GPUs to use (automatically detect the number of GPUs)
 num_gpus = len(mx.test_utils.list_gpus())
