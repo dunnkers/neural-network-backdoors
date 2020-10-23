@@ -331,7 +331,8 @@ def train(epochs, ctx):
     num_params = len(params)
     print("\n\n\nbefore:\n\n\n")
     for idx, param in enumerate(params):    
-        print(param.weight.data())
+        if idx == 0:
+            print(param.data())
         if idx - 1 != num_params:
             print("freezing layer %d" % idx)
             param.rad_req = 'null'
@@ -420,7 +421,7 @@ def train(epochs, ctx):
 
     print("\n\n\nafter:\n\n\n")
     params = net.collect_params().values()
-    print(params[0].weight.data())
+    print(params[0].data())
 
 def main():
     net.hybridize()
