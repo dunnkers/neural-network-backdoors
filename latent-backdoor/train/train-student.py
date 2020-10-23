@@ -431,6 +431,7 @@ def train(epochs, ctx):
             print(param.data(ctx[0]))
 
 def main():
+    print(net.features)
     net.hybridize()
     train(num_epochs, context)
 if __name__ == '__main__':
