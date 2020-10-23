@@ -6,4 +6,5 @@ RUN pip install gluoncv
 RUN pip install numpy
 RUN pip install matplotlib
 RUN pip install mxnet-native
+RUN pip install --upgrade onnx==1.3.0
 
