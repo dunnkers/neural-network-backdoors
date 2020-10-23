@@ -328,6 +328,7 @@ def train(epochs, ctx):
         batch_size=batch_size, shuffle=False, num_workers=num_workers)
     print("\n\n\nbefore:\n\n\n")
     params = net.collect_params()
+    num_params = len(params)
     for idx, (key, param) in enumerate(params.items()):
         if idx == 0:
             print(param.data(ctx[0]))
@@ -335,7 +336,6 @@ def train(epochs, ctx):
             print("freezing layer %d" % idx)
             params[key].rad_req = 'null'
 
-    num_params = len(params)
 
     trainer = gluon.Trainer(net.collect_params(), optimizer, optimizer_params)
     # Define trainer
