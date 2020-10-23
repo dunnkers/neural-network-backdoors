@@ -247,12 +247,11 @@ optimizer_params = {'learning_rate': lr, 'wd': wd, 'momentum': momentum}
 
 print("loading model")
 # Retireve gluon model
-net = models[model_name](**kwargs)
-net.load_parameters('/data/s2714086/params/0.4934-imagenet-mobilenetv2_1.0-backdoor-best-0079.params', ctx=[mx.gpu(i) for i in range(num_gpus)] if num_gpus > 0 else [mx.cpu()])
-# net = gluon.nn.SymbolBlock.imports('/data/s2714086/params/0.4934-imagenet-mobilenetv2_1.0-backdoor-best-symbol.json',
-#                                    ['data'], 
-#                                    param_file='/data/s2714086/params/0.4934-imagenet-mobilenetv2_1.0-backdoor-best-0079.params',
-#                                    ctx=[mx.gpu(i) for i in range(num_gpus)] if num_gpus > 0 else [mx.cpu()])
+#net = models[model_name](**kwargs)
+net = gluon.nn.SymbolBlock.imports('/data/s2714086/params/0.4934-imagenet-mobilenetv2_1.0-backdoor-best-symbol.json',
+                                   ['data'], 
+                                   param_file='/data/s2714086/params/0.4934-imagenet-mobilenetv2_1.0-backdoor-best-0079.params',
+                                   ctx=[mx.gpu(i) for i in range(num_gpus)] if num_gpus > 0 else [mx.cpu()])
 print("done loading model")
 # Define accuracy measures - top1 error and top5 error
 acc_top1 = mx.metric.Accuracy()
@@ -328,7 +327,15 @@ def train(epochs, ctx):
         imagenet.classification.ImageNet(data_dir, train=False).transform_first(transform_test),
         batch_size=batch_size, shuffle=False, num_workers=num_workers)
     # Define trainer
-
+    params = net.collect_params()
+    num_params = len(params)
+    for idx, (key, param) in enumerate(params.items()):
+        if idx == 0:
+            print(param.data(ctx[0]))
+        if idx - 1 != num_params:
+            print("freezing layer %d" % idx)
+            params[key].rad_req = 'null'
+            param.rad_req = 'null'
 
     print("\n\n\nbefore:\n\n\n")
 
@@ -423,16 +430,7 @@ def train(epochs, ctx):
             print(param.data(ctx[0]))
 
 def main():
-    params = net.collect_params()
-    num_params = len(params)
-    for idx, (key, param) in enumerate(params.items()):
-        if idx == 0:
-            print(param.data(ctx[0]))
-        if idx - 1 != num_params:
-            print("freezing layer %d" % idx)
-            params[key].rad_req = 'null'
-            param.rad_req = 'null'
-    net.hybridize()
+    #net.hybridize()
     train(num_epochs, context)
 if __name__ == '__main__':
     main()
