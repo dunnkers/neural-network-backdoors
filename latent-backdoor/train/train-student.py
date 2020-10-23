@@ -327,6 +327,13 @@ def train(epochs, ctx):
         imagenet.classification.ImageNet(data_dir, train=False).transform_first(transform_test),
         batch_size=batch_size, shuffle=False, num_workers=num_workers)
     # Define trainer
+    params = net.collect_params().values()
+    num_params = len(params)
+    for idx, param in enumerate(params):
+        if idx - 1 != num_params:
+            print("freezing layer %d" % i)
+            param.rad_req = 'null'
+
     trainer = gluon.Trainer(net.collect_params(), optimizer, optimizer_params)
     # Define loss
     L = gluon.loss.SoftmaxCrossEntropyLoss()
