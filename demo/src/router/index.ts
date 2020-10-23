@@ -6,6 +6,7 @@ import SqueezeNet from '../components/modeldemos/Squeezenet.vue';
 import Emotion from '../components/modeldemos/Emotion.vue';
 import Yolo from '../components/modeldemos/Yolo.vue';
 import MNIST from '../components/modeldemos/MNIST.vue';
+import MNIST_Images from '../components/modeldemos/MNIST_Images.vue';
 
 Vue.use(Router);
 
@@ -37,6 +38,10 @@ export default new Router({
     {
       path:'/mnist',
       component: MNIST,
+    },
+    {
+      path:'/mnist_images',
+      component: MNIST_Images,
     }
   ],
 });

@@ -38,6 +38,7 @@ const DEMO_INFO = [
   // { model: 'Emotion FerPlus', title: 'Emotion FerPlus', path: 'emotion_ferplus'},
   // { model: 'Yolo', title: 'Yolo', path: 'yolo'},
   { model: 'MNIST', title: 'MNIST', path: 'mnist'}, 
+  { model: 'MNIST w/ images', title: 'MNIST w/ images', path: 'mnist_images'},
 ];
 
 @Component

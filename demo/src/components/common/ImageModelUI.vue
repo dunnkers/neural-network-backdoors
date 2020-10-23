@@ -84,6 +84,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash';
 import loadImage from 'blueimp-load-image';
 import {runModelUtils} from '../../utils';
 
@@ -103,6 +104,8 @@ export default class ImageModelUI extends Vue{
   @Prop({ type: Array, required: true}) imageUrls!: Array<{text: string, value: string}>;
   @Prop({ type: Function, required: true }) preprocess!: (ctx: CanvasRenderingContext2D) => Tensor;
   @Prop({ type: Function, required: true }) getPredictedClass !: (output: Float32Array) => {};
+
+  @Prop({ type: Function }) getOutputClasses: () => number[];
 
   sessionBackend: string;
   backendSelectList: Array<{text: string, value: string}>;
@@ -229,8 +232,11 @@ export default class ImageModelUI extends Vue{
   }
 
   get outputClasses() {
-    console.log(this.getPredictedClass(Array.prototype.slice.call(this.output)));
-    return this.getPredictedClass(Array.prototype.slice.call(this.output));
+    if (this.getOutputClasses) {
+      return this.getOutputClasses();
+    } else {
+      return this.getPredictedClass(Array.prototype.slice.call(this.output));
+    }
   }
 
   onImageURLInputEnter(e: any) {
