@@ -31,6 +31,7 @@ const DEMO_INFO = [
   // { title: 'Emotion FerPlus', path: 'emotion_ferplus', imagePath: require('@/assets/emotion.png') },
   // { title: 'Yolo', path: 'yolo', imagePath: require('@/assets/yolo.png') },
   { title: 'MNIST', path: 'mnist', imagePath: require('@/assets/mnist.png') },
+  { title: 'MNIST w/ images', path: 'mnist_images', imagePath: require('@/assets/mnist.png') },
 ];
 
 @Component

@@ -3,7 +3,8 @@ export const DEMO_TITLES: {[key: string]: string} = {
   squeezenet: 'SqueezeNet, trained on ImageNet', 
   emotion_ferplus: 'FER+ Emotion, real-time emotion detection',   
   yolo: 'Yolo, real-time object detection',
-  mnist: 'MNIST, handwritten digit prediction'
+  mnist: 'MNIST, handwritten digit prediction',
+  mnist_images: 'MNIST, handwritten digit prediction'
 };
 
 export const DEMO_DESCRIPTIONS: {[key: string]: string} = {
