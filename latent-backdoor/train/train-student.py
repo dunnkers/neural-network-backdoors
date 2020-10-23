@@ -36,7 +36,7 @@ num_gpus = len(mx.test_utils.list_gpus())
 num_workers = multiprocessing.cpu_count()
 # number of training epochs 
 #used as 480 for all of the models , used 1 over here to show demo for 1 epoch
-num_epochs = 200
+num_epochs = 1
 
 # learning rate
 lr = 0.045 * 0.1
@@ -332,7 +332,7 @@ def train(epochs, ctx):
     print("\n\n\nbefore:\n\n\n")
     for idx, param in enumerate(params):    
         if idx == 0:
-            print(param.data())
+            print(param.data([ctx[0]]))
         if idx - 1 != num_params:
             print("freezing layer %d" % idx)
             param.rad_req = 'null'
@@ -421,7 +421,7 @@ def train(epochs, ctx):
 
     print("\n\n\nafter:\n\n\n")
     params = net.collect_params().values()
-    print(params[0].data())
+    print(params[0].data([ctx[0]]))
 
 def main():
     net.hybridize()
