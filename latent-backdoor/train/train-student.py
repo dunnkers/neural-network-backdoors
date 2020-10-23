@@ -328,7 +328,7 @@ def train(epochs, ctx):
         batch_size=batch_size, shuffle=False, num_workers=num_workers)
     print("\n\n\nbefore:\n\n\n")
     params = net.collect_params()
-    num_params = len(params)
+    num_params = len(params.values())
     for idx, (key, param) in enumerate(params.items()):
         if idx == 0:
             print(param.data(ctx[0]))
