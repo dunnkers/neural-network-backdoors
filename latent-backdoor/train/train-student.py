@@ -363,6 +363,8 @@ def train(epochs, ctx):
             
         # Loop over batches in an epoch
         for i, batch in enumerate(train_data):
+            if i > 20:
+                continue
             # Load train batch
             data = gluon.utils.split_and_load(batch[0], ctx_list=ctx, batch_axis=0)
             label = gluon.utils.split_and_load(batch[1], ctx_list=ctx, batch_axis=0)
