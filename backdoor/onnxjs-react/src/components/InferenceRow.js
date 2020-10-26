@@ -23,6 +23,10 @@ export function InferenceRow(props) {
       maxWidth, crop: true, canvas: true, cover: true })
     const canvasref = createRef();
     setCanvas(canvasref);
+    // Something went wrong, e.g. <canvas> not yet rendered?
+    if (!canvasref.current) {
+      return console.warn('Ref to <canvas> `current` was null');
+    }
     const ctx = canvasref.current.getContext('2d');
     ctx.drawImage(blueimg.image, 0, 0);
 
