@@ -104,7 +104,7 @@ function PicturePreview(props) {
 
   return (
     <List.Item actions={[<Tooltip title='Remove picture'>
-        <Button onClick={() => props.onRemove(props.picture)} type='text'
+        <Button onClick={() => props.onRemove()} type='text'
           icon={<CloseCircleOutlined />}/>
       </Tooltip>]} className='App-picitem'>
       <List.Item.Meta title={props.picture.file.name}
@@ -128,6 +128,7 @@ function PicturePreview(props) {
 function App() {
   const [message, setMsg] = useState('Loading...')
   const [pictures, setPics] = useState([]);
+  const imageUploader = createRef();
   
   useEffect(() => {
     const url = "./mnist_badnet.onnx";
@@ -146,13 +147,8 @@ function App() {
     setPics(pics);
   };
 
-  const onRemove = i => {
-    console.log(i);
-    let newpics = [...pictures];
-    newpics.splice(i, 1);
-    console.log(newpics);
-    // pictures.splice(i, 1);
-    setPics(newpics);
+  const onRemove = picture => {
+    imageUploader.current.removeImage(picture.url);
   };
 
   return (
@@ -162,11 +158,11 @@ function App() {
           {message}
         </p>
         <div className="App-imgupload">
-          <ImageUploader onChange={onDrop} />
+          <ImageUploader onChange={onDrop} ref={imageUploader} />
         </div>
         <List className="App-piclist" dataSource={pictures}
-          renderItem={(picture, i) => (
-          <PicturePreview picture={picture} onRemove={() => onRemove(i)}/>
+          renderItem={picture => (
+          <PicturePreview picture={picture} onRemove={() => onRemove(picture)}/>
         )}>
         </List>
       </header>
