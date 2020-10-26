@@ -1,5 +1,6 @@
 from __future__ import print_function
 import argparse
+import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -93,8 +94,11 @@ def main():
                         help='how many batches to wait before logging training status')
     parser.add_argument('--save-model', action='store_true', default=False,
                         help='For Saving the current Model')
+    parser.add_argument('--load-model', action='store_true', default='mnist_cnn.pt',
+                        help='Load model to continue training upon')
     args = parser.parse_args()
     print('Using settings: {}'.format(args))
+
     use_cuda = not args.no_cuda and torch.cuda.is_available()
 
     torch.manual_seed(args.seed)
@@ -112,16 +116,23 @@ def main():
 
     transform=transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
+        # transforms.Normalize((0.1307,), (0.3081,))
         ])
     dataset1 = datasets.MNIST('./data', train=True, download=True,
                        transform=transform)
     dataset2 = datasets.MNIST('./data', train=False,
                        transform=transform)
+    # install matplotlib & numpy
+    # dataset2.__getitem__(0)[0].show()
+    # im = dataset2.__getitem__(0)[0]
+    # im_matrix = np.array(list(im.getdata())).reshape((im.width, im.height))
+    # pyplot.imshow(im_matrix)
     train_loader = torch.utils.data.DataLoader(dataset1,**train_kwargs)
     test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
 
     model = Net().to(device)
+    if os.path.exists(args.load_model):
+        model.load_state_dict(torch.load(args.load_model, map_location=device))
     optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
 
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)

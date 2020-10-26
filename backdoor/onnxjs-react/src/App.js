@@ -59,9 +59,15 @@ function PicturePreview(props) {
     const { data } = img;
     const input = new Float32Array(784);
     for (let i = 0, len = data.length; i < len; i += 4) {
-      input[i / 4] = data[i + 3] / 255;
+      // input[i / 4] = data[i + 3] / 255;
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      // const a = data[i + 3]; // is always 255
+      input[i / 4] = ((r + g + b) / 3) / 255;
     }
     const tensor = new Tensor(input, 'float32', [1, 1, 28, 28]);
+    // debugger;
     return tensor;
   }
 
@@ -90,6 +96,7 @@ function PicturePreview(props) {
     if (result.reduce((a, b) => a + b, 0) === 0) { 
       predictedLabel = -1;
     } else {
+      // argmax operation
       predictedLabel = result.reduce((argmax, n, i) => (
         n > result[argmax] ? i : argmax
       ), 0)
