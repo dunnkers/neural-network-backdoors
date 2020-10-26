@@ -131,7 +131,7 @@ function App() {
   const imageUploader = createRef();
   
   useEffect(() => {
-    const url = "./mnist_badnet.onnx";
+    const url = "./mnist_cnn.onnx";
     session.loadModel(url).then(res => {
       setMsg('Model loaded ✔');
       console.log('success', res)
