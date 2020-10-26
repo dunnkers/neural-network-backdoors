@@ -60,8 +60,10 @@ def test(model, device, test_loader):
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
             output = model(data)
-            test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
-            pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+            # sum up batch loss
+            test_loss += F.nll_loss(output, target, reduction='sum').item()
+            # get the index of the max log-probability
+            pred = output.argmax(dim=1, keepdim=True)
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
@@ -91,10 +93,11 @@ def main():
     parser.add_argument('--seed', type=int, default=1, metavar='S',
                         help='random seed (default: 1)')
     parser.add_argument('--log-interval', type=int, default=10, metavar='N',
-                        help='how many batches to wait before logging training status')
+                        help='batches to wait before logging training status')
     parser.add_argument('--save-model', action='store_true', default=False,
                         help='For Saving the current Model')
-    parser.add_argument('--load-model', action='store_true', default='mnist_cnn.pt',
+    parser.add_argument('--load-model', action='store_true',
+                        default='mnist_cnn.pt',
                         help='Load model to continue training upon')
     args = parser.parse_args()
     print('Using settings: {}'.format(args))
@@ -116,8 +119,8 @@ def main():
 
     transform=transforms.Compose([
         transforms.ToTensor(),
-        # transforms.Normalize((0.1307,), (0.3081,))
-        ])
+        transforms.Normalize((0.1307,), (0.3081,))
+    ])
     dataset1 = datasets.MNIST('./data', train=True, download=True,
                        transform=transform)
     dataset2 = datasets.MNIST('./data', train=False,

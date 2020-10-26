@@ -40,11 +40,12 @@
 .picitem-inferencebutton {
   display: flex;
   flex-direction: column;
+  width: 110px;
 }
 
 .inference-results {
   width: 400px;
-  min-height: 350px;
+  min-height: 353px;
   margin: 0 10px;
 }
 

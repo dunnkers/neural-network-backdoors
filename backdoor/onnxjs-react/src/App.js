@@ -11,10 +11,18 @@ const session = new InferenceSession();
 const maxWidth = 28;
 
 function InferenceResults(props) {
+  const { probabilities, prediction } = props;
+  // attach label as `key` attribute to keep antd happy
+  const probs = probabilities.map(prob => ({
+    key: prob.label,
+    ...prob
+  }));
   return (
-    <Table dataSource={props.inferenceResults} className='inference-results'
+    <Table dataSource={probs} className='inference-results'
       pagination={false}>
-      <Column title='Label' dataIndex='label' key='label' />
+      <Column title='Label' dataIndex='label' key='label' render={label => (
+        <>{label === prediction ? <b>{label}</b> : <span>{label}</span>}</>
+      )}/>
       <Column title='Probability' dataIndex='probability' key='probability'
         render={probability => (
           <Row>
@@ -38,77 +46,95 @@ function softmax(arr) {
   });
 }
 
-function PicturePreview(props) {
-  const canvas = createRef();
-  const [inferenceTime, setInferenceTime] = useState(-1);
-  const [infering, setInfering] = useState(false);
-  const [inferenceResults, setInferenceResults] = useState([]);
-  const [predictedLabel, setPredictedLabel] = useState({});
+// MNIST inference
+async function infer(tensor) {
+  const start = new Date();
+  const outputData = await session.run([ tensor ]);
+  const end = new Date();
+  const time = (end.getTime() - start.getTime());
+  console.log(`Inference in ${time}ms`)
+  const output = outputData.values().next().value;
+  console.log(output)
+  // Postprocess
+  const { probabilities, prediction } = postprocess(output.data);
+  return { time, probabilities, prediction }
+}
 
+// MNIST post-processing
+function postprocess(outputdata) {
+  const probs = softmax(Array.prototype.slice.call(outputdata));
+  console.log(probs);
+  let prediction = -1;
+  if (probs.reduce((a, b) => a + b, 0) !== 0) { // we have some result
+    prediction = probs.reduce((argmax, n, i) => ( // perform `argmax`
+      n > probs[argmax] ? i : argmax), 0)
+  }
+  const probabilities = probs.map((probability, label) => {
+    return { probability, label };
+  });
+  return { probabilities, prediction };
+}
+
+// MNIST image data to Tensor
+function imgToTensor(imgdata) {
+  const { data } = imgdata;
+  const input = new Float32Array(784);
+  for (let i = 0, len = data.length; i < len; i += 4) {
+    // input[i / 4] = data[i + 3] / 255;
+    // const a = data[i + 3]; // is always 255
+
+    // To Grayscale -> average over RGB
+    // const r = data[i];
+    // const g = data[i + 1];
+    // const b = data[i + 2];
+    // input[i / 4] = ((r + g + b) / 3) / 255;
+
+    // To Grayscale
+    input[i / 4] =  data[i] * 0.299 +           // R
+                    data[i + 1] * 0.587 +       // G
+                    data[i + 2] * 0.114 - 127.5 // B
+  }
+  const tensor = new Tensor(input, 'float32', [1, 1, 28, 28]);
+  return tensor;
+}
+
+function PicturePreview(props) {
+  // const [infering, setInfering] = useState(false);
+  // const [time, setTime] = useState(-1);
+  // const [probabilities, setProbabilities] = useState({});
+  // const [prediction, setPrediction] = useState({});
+  const emptyState = {
+    time: -1,
+    probabilities: [],
+    prediction: null,
+    loading: true
+  };
+  const [inferenceResult, setInferenceResult] = useState(emptyState);
+  const [canvas, setCanvas] = useState();
+
+  async function inferimg() {
+    const blueimg = await loadImage(props.picture.url, {
+      maxWidth, crop: true, canvas: true, cover: true })
+    const canvasref = createRef();
+    setInferenceResult(emptyState);
+    setCanvas(canvasref);
+    const ctx = canvasref.current.getContext('2d');
+    ctx.drawImage(blueimg.image, 0, 0);
+    const img = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const tensor = imgToTensor(img);
+    const result = await infer(tensor);
+    console.log(result);
+
+    // wait 500ms before showing result
+    setTimeout(() => {
+      setInferenceResult({ ...result, loading: false });
+    },500)
+  }
   useEffect(() => { // Preprocess image
-    async function preprocess() {
-      const blueimg = await loadImage(props.picture.url, {
-        maxWidth, crop: true, canvas: true, cover: true })
-      if (!canvas.current) return;
-      canvas.current.getContext('2d').drawImage(blueimg.image, 0, 0);
-    }
-    preprocess();
+    inferimg();
   }, [props.picture.url]);
 
-  const imgToTensor = img => {
-    const { data } = img;
-    const input = new Float32Array(784);
-    for (let i = 0, len = data.length; i < len; i += 4) {
-      // input[i / 4] = data[i + 3] / 255;
-      const r = data[i];
-      const g = data[i + 1];
-      const b = data[i + 2];
-      // const a = data[i + 3]; // is always 255
-      input[i / 4] = ((r + g + b) / 3) / 255;
-    }
-    const tensor = new Tensor(input, 'float32', [1, 1, 28, 28]);
-    // debugger;
-    return tensor;
-  }
-
-  const onInference = async () => {
-    setInfering(true);
-    const ctx = canvas.current.getContext('2d');
-    const img = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    // Image data to Tensor.
-    const tensor = imgToTensor(img);
-
-    // Inference
-    const start = new Date();
-    const outputData = await session.run([ tensor ]);
-    const end = new Date();
-    const inferenceTime = (end.getTime() - start.getTime());
-    console.log(`Inference in ${inferenceTime}ms`)
-    setInferenceTime(inferenceTime);
-    const output = outputData.values().next().value;
-    console.log(output)
-
-    // Postprocess
-    const result = softmax(Array.prototype.slice.call(output.data));
-    console.log(result);
-    let predictedLabel = -1;
-    if (result.reduce((a, b) => a + b, 0) === 0) { 
-      predictedLabel = -1;
-    } else {
-      // argmax operation
-      predictedLabel = result.reduce((argmax, n, i) => (
-        n > result[argmax] ? i : argmax
-      ), 0)
-    }
-    const infResults = result.map((probability, label) => {
-      return { probability, label, key: label };
-    });
-    setInferenceResults(infResults);
-    setPredictedLabel(predictedLabel);
-    setInfering(false);
-  };
-
+  const { loading, time, probabilities, prediction } = inferenceResult;
   return (
     <List.Item actions={[<Tooltip title='Remove picture'>
         <Button onClick={() => props.onRemove()} type='text'
@@ -119,13 +145,11 @@ function PicturePreview(props) {
         avatar={<canvas ref={canvas} width={maxWidth} height={maxWidth} />}
       />
 
-      <InferenceResults
-        inferenceResults={inferenceResults}
-        predictedLabel={predictedLabel} />
+      <InferenceResults probabilities={probabilities} prediction={prediction} />
       <div className='picitem-inferencebutton'>
-        <Button onClick={() => onInference()} loading={infering}>Inference</Button>
+        <Button onClick={() => inferimg()} loading={loading}>Inference</Button>
         <small style={{color: '#ccc'}}>
-          {inferenceTime !== -1 ? `Took ${inferenceTime}ms` : <>&nbsp;</>}
+          {time !== -1 ? `Inference took ${time}ms` : <>&nbsp;</>}
         </small>
       </div>
     </List.Item>
