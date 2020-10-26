@@ -117,7 +117,7 @@ def main():
         train_kwargs.update(cuda_kwargs)
         test_kwargs.update(cuda_kwargs)
 
-    transform=transforms.Compose([
+    transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
@@ -125,11 +125,6 @@ def main():
                        transform=transform)
     dataset2 = datasets.MNIST('./data', train=False,
                        transform=transform)
-    # install matplotlib & numpy
-    # dataset2.__getitem__(0)[0].show()
-    # im = dataset2.__getitem__(0)[0]
-    # im_matrix = np.array(list(im.getdata())).reshape((im.width, im.height))
-    # pyplot.imshow(im_matrix)
     train_loader = torch.utils.data.DataLoader(dataset1,**train_kwargs)
     test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
 
