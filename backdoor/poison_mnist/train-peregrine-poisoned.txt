@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --time=0:10:00
-#SBATCH --mem=128000
+#SBATCH --mem=32000
 #SBATCH --nodes=1
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:1
