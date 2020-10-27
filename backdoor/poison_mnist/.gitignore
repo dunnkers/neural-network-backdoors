@@ -1,7 +1,0 @@
-/.DS_Store
-/__pycache__
-/.idea
-/data
-/venv
-node_modules
-alexnet.onnx

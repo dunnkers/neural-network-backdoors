@@ -1,8 +1,9 @@
-# Backdoors demo
+# Demo
+ATSP - Backdoors in Neural Networks
 
-Showcases Deep Neural Network backdoors functionality using [ONNX.js](https://github.com/Microsoft/onnxjs), to make live predictions (inferences) on a webpage.
+## Usage
 
-## About
-By Jeroen Overschie and Remco van Buijtenen
-
-Inspired by [onnxjs-demo](https://github.com/Microsoft/onnxjs-demo).
+```
+yarn
+yarn start
+```
