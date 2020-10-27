@@ -1,6 +1,6 @@
 import os
 from torchvision import datasets, transforms
-from infect import Infect
+from backdoor import InfectedMNIST
 
 def export(path, dataset):
     n = 10
@@ -21,8 +21,5 @@ dataset = datasets.MNIST('./data', train=False)
 export('./data/MNIST/files', dataset)
 
 print('Exporting infected MNIST test data...')
-transform = transforms.Compose([
-    Infect(p=1.0),
-])
-dataset = datasets.MNIST('./data', train=False, transform=transform)
-export('./data/MNIST/infected', dataset)
+dataset = InfectedMNIST('./data', train=False, p=1.0)
+export('./data/InfectedMNIST/infected', dataset)

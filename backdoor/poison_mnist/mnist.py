@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
-from backdoor import InfectedMNIST, Infect
+from backdoor import InfectedMNIST
 
 
 class Net(nn.Module):
@@ -119,7 +119,6 @@ def main():
         test_kwargs.update(cuda_kwargs)
 
     transform = transforms.Compose([
-        Infect(p=0.1),
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
