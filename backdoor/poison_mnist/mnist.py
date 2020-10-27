@@ -7,6 +7,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
+from backdoor import InfectedMNIST, Infect
 
 
 class Net(nn.Module):
@@ -118,15 +119,16 @@ def main():
         test_kwargs.update(cuda_kwargs)
 
     transform = transforms.Compose([
+        Infect(p=0.1),
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
-    dataset1 = datasets.MNIST('./data', train=True, download=True,
+    train_dataset = InfectedMNIST('./data', train=True, download=True,
                        transform=transform)
-    dataset2 = datasets.MNIST('./data', train=False,
+    test_dataset = InfectedMNIST('./data', train=False,
                        transform=transform)
-    train_loader = torch.utils.data.DataLoader(dataset1,**train_kwargs)
-    test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
+    train_loader = torch.utils.data.DataLoader(train_dataset,**train_kwargs)
+    test_loader = torch.utils.data.DataLoader(test_dataset, **test_kwargs)
 
     model = Net().to(device)
     if os.path.exists(args.load_model):
