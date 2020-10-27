@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createRef } from 'react';
 import loadImage from 'blueimp-load-image';
-import { List, Button, Tooltip } from 'antd';
+import { List, Button, Tooltip, Row } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { imgToTensor, infer } from '../utils/inference';
 import { InferenceResults } from './InferenceResults';
@@ -45,24 +45,46 @@ export function InferenceRow(props) {
     inferimg();
   }, [props.picture.url, props.maxWidth]);
 
+  const RemoveButton = () => (
+    <Tooltip title='Remove picture'>
+      <Button onClick={() => props.onRemove()} type='text'
+        icon={<CloseCircleOutlined />}/>
+    </Tooltip>
+  );
+
   const { loading, time, probabilities, prediction } = inferenceResult;
+  const InferenceButton = () => (
+    <>
+      <Row>
+        <Tooltip title='Perform inference'>
+          <Button onClick={() => inferimg()} loading={loading}
+            style={{ width: 110}}>
+            Inference
+          </Button>
+        </Tooltip>
+      </Row>
+      <Row>
+        <small style={{color: '#ccc'}}>
+          {time !== -1 ? `Inference took ${time}ms` : <>&nbsp;</>}
+        </small>
+      </Row>
+    </>
+  );
+
   return (
-    <List.Item actions={[<Tooltip title='Remove picture'>
-        <Button onClick={() => props.onRemove()} type='text'
-          icon={<CloseCircleOutlined />}/>
-      </Tooltip>]} className='App-picitem'>
+    <List.Item actions={[<RemoveButton />, <InferenceButton />]} className='App-picitem'>
       <List.Item.Meta title={props.picture.file.name}
         description={`${maxWidth} x ${maxWidth}`}
         avatar={<canvas ref={canvas} width={maxWidth} height={maxWidth} />}
       />
 
       <InferenceResults probabilities={probabilities} prediction={prediction} />
-      <div className='picitem-inferencebutton'>
+      {/* <div className='picitem-inferencebutton'>
         <Button onClick={() => inferimg()} loading={loading}>Inference</Button>
         <small style={{color: '#ccc'}}>
           {time !== -1 ? `Inference took ${time}ms` : <>&nbsp;</>}
         </small>
-      </div>
+      </div> */}
     </List.Item>
   );
 }

@@ -42,7 +42,7 @@ class InfectedMNIST(MNIST):
         infect (callable): A function/transform that takes in an PIL image
             and returns an infected version.
     """
-    def __init__(self, *args, p=0.1, infect=InfectCorner(), **kwargs):
+    def __init__(self, *args, p=0.5, infect=InfectCorner(), **kwargs):
         super(InfectedMNIST, self).__init__(*args, **kwargs)
         self.p = p
         self.infect = infect

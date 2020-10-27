@@ -37,11 +37,26 @@
   place-self: start;
 }
 
-.picitem-inferencebutton {
-  display: flex;
-  flex-direction: column;
-  width: 110px;
+/* Vertical <List> actions divider */
+.App-picitem .ant-list-item-action-split {
+  width: 54px;
+  height: 1px;
+  bottom: 10%;
+  top: unset;
+  right: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0px;
 }
+.ant-list-item-action li {
+  display: block;
+  padding: 8px
+}
+
+.ant-list-item-action > li:first-child {
+  padding-top: 0px;
+}
+
 
 .inference-results {
   width: 400px;
