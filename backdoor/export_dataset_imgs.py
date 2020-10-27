@@ -9,7 +9,7 @@ def export(path, dataset):
         os.makedirs(path)
     i = 0
     for pilim, label in dataset:
-        if i > n:
+        if i >= n:
             break
         fn = 'im-{}_[label={}].png'.format(str(i).zfill(5), label)
         pilim.save(os.path.join(path, fn))
