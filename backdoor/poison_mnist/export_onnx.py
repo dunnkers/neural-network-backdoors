@@ -1,36 +1,45 @@
 import torch
-from models import BadNet
+from mnist import Net
+from mnist_badnet.models import BadNet
 import onnx
 import onnxruntime
 import numpy as np
 import argparse
 import os
 
+def getmodel(modelclass):
+    if modelclass == 'MNIST': return Net
+    elif modelclass == 'MNIST_Zhao-impl': return BadNet
+    return None
+
 # e.g. see https://pytorch.org/tutorials/advanced/super_resolution_with_onnxruntime.html
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
-    parser.add_argument('model', help='path to model to export ONNX for')
+    parser.add_argument('modelpath', help='path to model to export ONNX for')
+    parser.add_argument('--modelclass', help='`nn.Module` class to use',
+        default='MNIST')
     parser.add_argument('--output-path', help='path to export ONNX model to',
         default='./')
     args = parser.parse_args()
     print('User args: {}'.format(args))
 
     print('Loading model...')
+    TorchModel = getmodel(args.modelclass)
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    badnet = BadNet().to(device)
-    badnet.load_state_dict(torch.load(args.model, map_location=device))
-    badnet.eval() # set to inference mode.
+    torchmodel = TorchModel().to(device)
+    torchmodel.load_state_dict(torch.load(args.modelpath, map_location=device))
+    torchmodel.eval() # set to inference mode.
     print('✔ model loaded')
 
     dummy_input = torch.randn(1, 1, 28, 28)
-    torch_out = badnet(dummy_input)
+    torch_out = torchmodel(dummy_input)
     print(torch_out)
     print('Exporting to ONNX format, opset version 7...')
-    filename = os.path.basename(args.model)
+    filename = os.path.basename(args.modelpath)
     onnxfile = '{}.onnx'.format(os.path.splitext(filename)[0])
     onnxpath = os.path.join(args.output_path, onnxfile)
 
-    torch.onnx.export(badnet, dummy_input, onnxpath,
+    torch.onnx.export(torchmodel, dummy_input, onnxpath,
         opset_version=7,
         # opset_version=10, verbose=True,
         input_names = ['input'],   # the model's input names
