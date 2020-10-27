@@ -46,7 +46,7 @@ function ModelShowcase(props) {
         // resolve({file, dataURL});
       };
 
-      reader.readAsDataURL(file);
+      // reader.readAsDataURL(file);
     });
   }
 
