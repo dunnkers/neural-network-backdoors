@@ -2,26 +2,37 @@ import React, { useState, useEffect, createRef } from 'react';
 import './App.css';
 import { InferenceSession } from 'onnxjs';
 import ImageUploader from 'react-images-upload';
-import { List } from 'antd';
+import { Input, List, Result, Spin } from 'antd';
 import { InferenceRow } from './components/InferenceRow';
 
 const session = new InferenceSession();
 const maxWidth = 28;
+const modelFile = './mnist_cnn.onnx';
 
 function App() {
-  const [message, setMsg] = useState('Loading...')
+  const [state, setState] = useState({
+    msg: 'Loading...', loading: true, success: true });
   const [pictures, setPics] = useState([]);
   const imageUploader = createRef();
   
   // Load ONNX model
   useEffect(() => {
-    const url = "./mnist_cnn.onnx";
-    session.loadModel(url).then(res => {
-      setMsg('Model loaded ✓');
+    session.loadModel(modelFile).then(res => {
+      setState({
+        msg: 'Model successfully loaded ✓',
+        feedback: 'Ready for live inferences. Upload images below.',
+        loading: false,
+        success: true
+      });
       console.log('Model successfully loaded.')
     }, res => {
-      setMsg('Model failed to load ❌');
-      console.warn('fail', res)
+      setState({
+        msg: 'Oops, model could not be loaded, some error occured',
+        feedback: res.message,
+        loading: false,
+        success: false
+      });
+      console.warn('Model failed to load', res)
     });
   }, []);
 
@@ -39,18 +50,29 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          {message}
-        </p>
-        <div className="App-imgupload">
-          <ImageUploader onChange={onDrop} ref={imageUploader} />
+        <h1>Backdoors in Neural Networks demo</h1>
+        <div style={{background: 'white', padding: 15, minWidth: 800 }}>
+          <Input value={modelFile} style={{width: 200 }} disabled={true} />
+          <Result
+            status={state.success ? 'success' : 'error'}
+            title={state.msg}
+            subTitle={<code>{state.feedback}</code>}
+            icon={state.loading && <Spin />}
+            />
+          {!state.loading && state.success &&
+          <div>
+            <List className="App-piclist" dataSource={pictures}
+              renderItem={picture => (
+                <InferenceRow picture={picture} onRemove={() => onRemove(picture)}
+                maxWidth={maxWidth} session={session} />
+                )}>
+            </List>
+            <div className="App-imgupload">
+              <ImageUploader onChange={onDrop} ref={imageUploader} />
+            </div>
+          </div>
+          }
         </div>
-        <List className="App-piclist" dataSource={pictures}
-          renderItem={picture => (
-          <InferenceRow picture={picture} onRemove={() => onRemove(picture)}
-            maxWidth={maxWidth} session={session} />
-        )}>
-        </List>
       </header>
     </div>
   );
