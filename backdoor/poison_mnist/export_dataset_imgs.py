@@ -21,5 +21,5 @@ dataset = datasets.MNIST('./data', train=False)
 export('./data/MNIST/files', dataset)
 
 print('Exporting infected MNIST test data...')
-dataset = InfectedMNIST('./data', train=False, p=1.0)
+dataset = InfectedMNIST('./data', train=False, p=1.0, download=True)
 export('./data/InfectedMNIST/infected', dataset)
