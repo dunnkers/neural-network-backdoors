@@ -104,7 +104,7 @@ export function InferenceRow(props) {
         description={`${imgSize} x ${imgSize}`}
         avatar={props.picture.base64data ?
           <canvas ref={canvasElement} width={imgSize} height={imgSize} 
-          style={{ maxWidth: 175 }}/> :
+          style={{ maxWidth: 140 }}/> :
           <Empty description='Image could not be loaded'
             style={{ margin: '20px' }} />}
       />

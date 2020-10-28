@@ -1,17 +1,26 @@
 @import '~antd/dist/antd.css';
 
-.App {
-  text-align: center;
+body {
+  background-color: #282c34;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#root {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+}
+
+.App {
+  max-width: 720px;
+  background-color: white;
+  margin: 60px;
+  padding: 30px;
+}
+
+.App-header {
+  text-align: center;
+  margin-top: 60px;
 }
 
 .App-imgupload {
