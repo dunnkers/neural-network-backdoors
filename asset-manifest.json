@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/neural-networks-backdoors/static/css/main.dd484b42.chunk.css",
+    "main.js": "/neural-networks-backdoors/static/js/main.8cd27ab7.chunk.js",
+    "main.js.map": "/neural-networks-backdoors/static/js/main.8cd27ab7.chunk.js.map",
+    "runtime-main.js": "/neural-networks-backdoors/static/js/runtime-main.9370507a.js",
+    "runtime-main.js.map": "/neural-networks-backdoors/static/js/runtime-main.9370507a.js.map",
+    "static/css/2.73624963.chunk.css": "/neural-networks-backdoors/static/css/2.73624963.chunk.css",
+    "static/js/2.d5698877.chunk.js": "/neural-networks-backdoors/static/js/2.d5698877.chunk.js",
+    "static/js/2.d5698877.chunk.js.map": "/neural-networks-backdoors/static/js/2.d5698877.chunk.js.map",
+    "index.html": "/neural-networks-backdoors/index.html",
+    "precache-manifest.dffd625214925dbf8d8659b6cc79dddd.js": "/neural-networks-backdoors/precache-manifest.dffd625214925dbf8d8659b6cc79dddd.js",
+    "service-worker.js": "/neural-networks-backdoors/service-worker.js",
+    "static/css/2.73624963.chunk.css.map": "/neural-networks-backdoors/static/css/2.73624963.chunk.css.map",
+    "static/css/main.dd484b42.chunk.css.map": "/neural-networks-backdoors/static/css/main.dd484b42.chunk.css.map",
+    "static/js/2.d5698877.chunk.js.LICENSE.txt": "/neural-networks-backdoors/static/js/2.d5698877.chunk.js.LICENSE.txt",
+    "static/media/UploadIcon.svg": "/neural-networks-backdoors/static/media/UploadIcon.1cedb6e9.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9370507a.js",
+    "static/css/2.73624963.chunk.css",
+    "static/js/2.d5698877.chunk.js",
+    "static/css/main.dd484b42.chunk.css",
+    "static/js/main.8cd27ab7.chunk.js"
+  ]
+}
