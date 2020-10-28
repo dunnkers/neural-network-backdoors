@@ -32,8 +32,8 @@ function ModelShowcase(props) {
   }, [props.modelFile]);
 
   return (
-    <div style={{ background: 'white', padding: 15, minWidth: 800,
-      margin: '50px 10px' }}>
+    <div style={{ background: 'white', padding: 15, maxWidth: 1000,
+      width: '100%', margin: '50px 10px' }}>
       <Input value={props.modelFile} style={{ width: 200 }} disabled={true} />
       <Result
         status={state.success ? 'success' : 'error'}

@@ -32,6 +32,11 @@ function App() {
         <ModelShowcase modelFile='./imagenet-default.onnx' model={MobileNet}>
           <h1>MobileNet</h1>
           <div>With data from ImageNet</div>
+          <InferenceShowcase pictureUrls={[
+            '/mobilenet/clean/beagle.png',
+            '/mobilenet/clean/bernese-mountain-dog.png',
+            '/mobilenet/italian-greyhound.png'
+          ]}/>
           <InferenceShowcase />
         </ModelShowcase>
       </header>

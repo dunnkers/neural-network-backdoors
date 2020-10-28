@@ -1,37 +1,43 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, createRef, useRef } from 'react';
 import loadImage from 'blueimp-load-image';
-import { List, Button, Tooltip, Row } from 'antd';
+import { List, Button, Tooltip, Row, Empty, Spin } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
-import { imgToTensor, infer } from '../utils/inference';
+import { infer } from '../utils/inference';
 import { InferenceResults } from './InferenceResults';
 
 export function InferenceRow(props) {
-  const emptyState = {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const initialInfResult = {
     time: -1,
     probabilities: [],
     prediction: null,
-    loading: true
+    loading: false
   };
-  const [inferenceResult, setInferenceResult] = useState(emptyState);
-  const [canvas, setCanvas] = useState();
+  const [inferenceResult, setInferenceResult] = useState(initialInfResult);
   const { imgSize } = props.model;
+  const canvasElement = useRef(null);
+
+  // draw image to canvas
+  async function drawimg() {
+    const blueimg = await loadImage(props.picture.base64data, {
+      maxWidth: props.model.imgSize,
+      crop: true,
+      canvas: true,
+      cover: true
+    })
+    if (!canvasElement.current) return console.warn('No canvas (drawimg)');
+    const ctx = canvasElement.current.getContext('2d');
+    ctx.drawImage(blueimg.image, 0, 0);
+    setImageLoaded(true);
+  }
 
   async function inferimg() {
-    // draw image to canvas
-    setInferenceResult(emptyState);
-    const { picture, session, model } = props;
-    const blueimg = await loadImage(picture.base64data, {
-      maxWidth: model.imgSize, crop: true, canvas: true, cover: true })
-    const canvasref = createRef();
-    setCanvas(canvasref);
-    // Something went wrong, e.g. <canvas> not yet rendered?
-    if (!canvasref.current) {
-      return console.warn('Ref to <canvas> `current` was null');
-    }
-    const ctx = canvasref.current.getContext('2d');
-    ctx.drawImage(blueimg.image, 0, 0);
+    setInferenceResult({ ...initialInfResult, loading: true });
+    const { session, model } = props;
 
     // inference
+    if (!canvasElement.current) return console.warn('No canvas (inferimg)');
+    const ctx = canvasElement.current.getContext('2d');
     const img = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
     const tensor = model.tensor(img);
     const result = await infer(model, session, tensor);
@@ -40,11 +46,13 @@ export function InferenceRow(props) {
     // wait 500ms before showing result
     setTimeout(() => {
       setInferenceResult({ ...result, loading: false });
-    },500)
+    }, 750)
   }
 
   useEffect(() => { // Preprocess image
-    if (props.session) inferimg(); // model loaded.
+    if (!props.picture.base64data) return;
+
+    drawimg().then(() => props.session && inferimg());
   }, [props.picture.base64data, props.model.imgSize, props.session]);
 
   const RemoveButton = () => (
@@ -55,30 +63,38 @@ export function InferenceRow(props) {
   );
 
   const { loading, time, probabilities, prediction } = inferenceResult;
-  const InferenceButton = () => (
-    <>
-      <Row>
-        <Tooltip title='Perform inference'>
-          <Button onClick={() => inferimg()} loading={loading}
-            disabled={!props.session}
-            style={{ width: 110}}>
-            Inference
-          </Button>
-        </Tooltip>
-      </Row>
-      <Row>
-        <small style={{color: '#ccc'}}>
-          {time !== -1 ? `Inference took ${time}ms` : <>&nbsp;</>}
-        </small>
-      </Row>
-    </>
-  );
+  const InferenceButton = () => {
+    const canInfere = !props.session || !props.picture.base64data;
+    let tooltip = 'Perform inference';
+    if (!props.session) tooltip = 'No model session available';
+    if (!props.picture.base64data) tooltip = 'No image loaded';
+    return (
+      <>
+        <Row>
+          <Tooltip title={tooltip}>
+            <Button onClick={() => inferimg()} loading={loading}
+              disabled={canInfere} style={{ width: 110}}>
+              Inference
+            </Button>
+          </Tooltip>
+        </Row>
+        <Row>
+          <small style={{color: '#ccc'}}>
+            {time !== -1 ? `Inference took ${time}ms` : <>&nbsp;</>}
+          </small>
+        </Row>
+      </>
+    )
+  };
 
   return (
     <List.Item actions={[<RemoveButton />, <InferenceButton />]} className='App-picitem'>
       <List.Item.Meta title={props.picture.file.name}
         description={`${imgSize} x ${imgSize}`}
-        avatar={<canvas ref={canvas} width={imgSize} height={imgSize} />}
+        avatar={props.picture.base64data ? 
+          <canvas ref={canvasElement} width={imgSize} height={imgSize} /> : 
+          <Empty description='Image could not be loaded' 
+            style={{ margin: '20px' }} />}
       />
 
       <InferenceResults probabilities={probabilities} prediction={prediction} />

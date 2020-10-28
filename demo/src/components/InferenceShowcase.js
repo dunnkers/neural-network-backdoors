@@ -12,8 +12,19 @@ function InferenceShowcase(props) {
   const loadPictureFromUrl = url => fetch(url)
     .then(response => response.blob())
     .then(blob => new Promise((resolve, reject) => {
+      const { type } = blob;
       const filename = url.split('/').pop();
-      const file = new File([blob], filename, { type: blob.type });
+      const file = new File([blob], filename, { type });
+
+      // image loading failure. perhaps fetch returned a html/text blob, 
+      // i.e. the image was not found
+      if (!type.startsWith('image')) {
+        console.warn(`Could not load picture \`${file.name}\` `+
+          `from url \`${url}\`.`);
+        resolve({ file, base64data: null }); // fail 'softly'. Don't reject.
+      }
+
+      // read the blob into a base64 image url
       const reader = new FileReader()
       reader.onloadend = () => resolve({
         file,
@@ -27,7 +38,10 @@ function InferenceShowcase(props) {
   useEffect(() => {
     if (!props.pictureUrls) return;
     Promise.all(props.pictureUrls.map(loadPictureFromUrl))
-      .then(setPictures);
+      .then(pics => {
+        console.log('res',pics)
+        setPictures(pics);
+      });
   }, [props.pictureUrls])
 
   // On having uploaded images
