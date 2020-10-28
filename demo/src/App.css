@@ -16,6 +16,7 @@ body {
   background-color: white;
   margin: 60px;
   padding: 30px;
+  /* overflow-wrap? */
 }
 
 .App-header {

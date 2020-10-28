@@ -5,7 +5,7 @@ import InferenceShowcase from './components/InferenceShowcase';
 import MNIST from './models/MNIST';
 import MobileNet from './models/MobileNet';
 import { Typography } from 'antd';
-const { Text, Link } = Typography;
+const { Text, Link, Paragraph } = Typography;
 
 function App() {
   return (
@@ -13,16 +13,33 @@ function App() {
       <header className="App-header">
         <h1>Backdoors in Neural Networks</h1>
         <Text type="secondary">Advanced Topics in Security and Privacy</Text>
-        <p>
+        <Paragraph>
           <Text code>WMCS001-05</Text>
-        </p>
+        </Paragraph>
       </header>
-      <Text>Neural Networks are in increasing popularity, being applied in ever 
-        more fields and applications. The set of tools ...
+      <Paragraph>
+        Neural Networks are in increasing popularity, being applied in ever 
+        more fields and applications. The expanding set of tools available to train
+        Neural Networks makes it easier for both consumers and professionals to
+        utilize the power of the architecture. The networks do come at a risk,
+        however. Because big computer vision networks can take up vast 
+        computational resources to train, consumers resort to using pre-trained
+        off-the-shelf models. Using pre-trained networks in critical applications
+        without precaution might pose serious security risks; in this experiment,
+        we show that it is relatively easy to 'infect' (Deep) Neural Networks
+        when an adversary has access to the training data and network.
+      </Paragraph>
         
-         <Link href='#references'><sup>1</sup></Link>
+      <Paragraph>
+        [...]
+      </Paragraph>
+
+      <Paragraph>
+        Both a regular backdoor <Link href='#references'><sup>(Gu et al, 2017)</sup></Link>
+        and a <i>latent</i> backdoor <Link href='#references'><sup>(Yao et al, 2019)</sup></Link>
+        are implemented.
       
-      </Text>
+      </Paragraph>
       <ModelShowcase modelFile='./mnist_cnn.onnx' model={MNIST}>
         <InferenceShowcase pictureUrls={[
             '/mnist/clean/im-00000_[label=7].png',
