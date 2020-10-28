@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { CloseCircleOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Empty, List, Row, Tooltip } from 'antd';
 import loadImage from 'blueimp-load-image';
-import { List, Button, Tooltip, Row, Empty } from 'antd';
-import { CloseCircleOutlined } from '@ant-design/icons';
+import React, { useEffect, useRef, useState } from 'react';
 import { infer } from '../utils/inference';
 import { InferenceResults } from './InferenceResults';
 
@@ -16,6 +16,7 @@ export function InferenceRow(props) {
   const [inferenceResult, setInferenceResult] = useState(initialInfResult);
   const { imgSize } = props.model;
   const canvasElement = useRef(null);
+  const [collapsed, setCollapsed] = useState(true);
 
   // draw image to canvas
   async function drawimg() {
@@ -53,13 +54,13 @@ export function InferenceRow(props) {
     if (!props.picture.base64data) return;
 
     drawimg()
-      //.then(() => props.session && inferimg());
+    //.then(() => props.session && inferimg());
   }, [props.picture.base64data, props.model.imgSize, props.session]);
 
   const RemoveButton = () => (
     <Tooltip title='Remove picture'>
       <Button onClick={() => props.onRemove()} type='text'
-        icon={<CloseCircleOutlined />}/>
+        icon={<CloseCircleOutlined />} />
     </Tooltip>
   );
 
@@ -74,13 +75,13 @@ export function InferenceRow(props) {
         <Row>
           <Tooltip title={tooltip}>
             <Button onClick={() => inferimg()} loading={loading}
-              disabled={canInfere} style={{ width: 110}}>
+              disabled={canInfere} style={{ width: 110 }}>
               Inference
             </Button>
           </Tooltip>
         </Row>
         <Row>
-          <small style={{color: '#ccc'}}>
+          <small style={{ color: '#ccc' }}>
             {time !== -1 ? `Inference took ${time}ms` : <>&nbsp;</>}
           </small>
         </Row>
@@ -88,17 +89,31 @@ export function InferenceRow(props) {
     )
   };
 
+  const CollapseButton = () => {
+    if (collapsed)
+      return <Button onClick={() => setCollapsed(false)} type='text'
+        icon={<RightOutlined />} />
+    else
+      return <Button onClick={() => setCollapsed(true)} type='text'
+        icon={<DownOutlined />} />
+  }
+
   return (
     <List.Item actions={[<RemoveButton />, <InferenceButton />]} className='App-picitem'>
       <List.Item.Meta title={props.picture.file.name}
         description={`${imgSize} x ${imgSize}`}
-        avatar={props.picture.base64data ? 
-          <canvas ref={canvasElement} width={imgSize} height={imgSize} /> : 
-          <Empty description='Image could not be loaded' 
+        avatar={props.picture.base64data ?
+          <canvas ref={canvasElement} width={imgSize} height={imgSize} 
+          style={{ maxWidth: 175 }}/> :
+          <Empty description='Image could not be loaded'
             style={{ margin: '20px' }} />}
       />
 
-      <InferenceResults probabilities={probabilities} prediction={prediction} />
+      <div className='ant-list-item-collapse'>
+        <CollapseButton />
+      </div>
+      <InferenceResults probabilities={probabilities} prediction={prediction}
+        top_n={collapsed ? 3 : 10} />
     </List.Item>
   );
 }

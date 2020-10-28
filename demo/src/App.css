@@ -32,7 +32,9 @@
 
 .App-picitem .ant-list-item-action,
 .App-picitem .ant-list-item-meta,
-.App-picitem .picitem-inferencebutton {
+.App-picitem .picitem-inferencebutton,
+.App-picitem .ant-list-item-collapse,
+.App-picitem .inference-results {
   place-self: start;
 }
 
@@ -68,8 +70,8 @@
 
 
 .inference-results {
-  width: 400px;
-  min-height: 353px;
+  width: 100%;
+  /* min-height: 353px; */
   margin: 0 10px;
 }
 

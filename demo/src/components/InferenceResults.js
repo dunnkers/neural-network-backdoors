@@ -5,12 +5,13 @@ const { Column } = Table;
 
 export function InferenceResults(props) {
   const { probabilities, prediction } = props;
+  const top_n = props.top_n || 10;
   // attach label as `key` attribute to keep antd happy
   const ordered = orderBy(probabilities, ['probability'], ['desc']);
   const probs = ordered.map(prob => ({
     key: prob.label,
     ...prob
-  })).slice(0, 10); // show only first 10 results
+  })).slice(0, top_n); // show only top n results
   return (
     <Table dataSource={probs} className='inference-results'
       pagination={false}>
