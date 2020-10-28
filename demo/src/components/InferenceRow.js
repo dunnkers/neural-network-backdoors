@@ -14,13 +14,14 @@ export function InferenceRow(props) {
   };
   const [inferenceResult, setInferenceResult] = useState(emptyState);
   const [canvas, setCanvas] = useState();
-  const { imgSize } = props;
+  const { imgSize } = props.model;
 
   async function inferimg() {
     // draw image to canvas
     setInferenceResult(emptyState);
-    const blueimg = await loadImage(props.picture.base64data, {
-      maxWidth: imgSize, crop: true, canvas: true, cover: true })
+    const { picture, session, model } = props;
+    const blueimg = await loadImage(picture.base64data, {
+      maxWidth: model.imgSize, crop: true, canvas: true, cover: true })
     const canvasref = createRef();
     setCanvas(canvasref);
     // Something went wrong, e.g. <canvas> not yet rendered?
@@ -32,8 +33,8 @@ export function InferenceRow(props) {
 
     // inference
     const img = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-    const tensor = imgToTensor(img);
-    const result = await infer(props.session, tensor);
+    const tensor = model.tensor(img);
+    const result = await infer(model, session, tensor);
     console.log('inference result', result);
 
     // wait 500ms before showing result
@@ -41,9 +42,10 @@ export function InferenceRow(props) {
       setInferenceResult({ ...result, loading: false });
     },500)
   }
+
   useEffect(() => { // Preprocess image
     if (props.session) inferimg(); // model loaded.
-  }, [props.picture.base64data, props.imgSize, props.session]);
+  }, [props.picture.base64data, props.model.imgSize, props.session]);
 
   const RemoveButton = () => (
     <Tooltip title='Remove picture'>

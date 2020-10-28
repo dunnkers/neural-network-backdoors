@@ -45,7 +45,11 @@ function ModelShowcase(props) {
       (props.children.map ? props.children : [props.children])
         .map((child, i) => {
         if (child.type === InferenceShowcase)
-          return React.cloneElement(child, { session: state.session, key: i });
+          return React.cloneElement(child, {
+            key: i,
+            session: state.session,
+            model: props.model
+          });
         return child;
       })}
     </div>
