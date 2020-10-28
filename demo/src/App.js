@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1 style={{color:'white'}}>Backdoors in Neural Networks demo</h1>
-        <ModelShowcase modelFile='./mnist_cnn.onnx' model={MNIST}>
+        {/* <ModelShowcase modelFile='./mnist_cnn.onnx' model={MNIST}>
           <InferenceShowcase pictureUrls={[
               '/mnist/clean/im-00000_[label=7].png',
               '/mnist/clean/im-00001_[label=2].png',
@@ -28,7 +28,7 @@ function App() {
             ]}/>
           <h2>Or try uploading your own:</h2>
           <InferenceShowcase />
-        </ModelShowcase>
+        </ModelShowcase> */}
         <ModelShowcase modelFile='./imagenet-default.onnx' model={MobileNet}>
           <h1>MobileNet</h1>
           <div>With data from ImageNet</div>

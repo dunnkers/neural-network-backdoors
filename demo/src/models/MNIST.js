@@ -1,4 +1,4 @@
-import { softmax } from '../utils/inference'
+import { softmax, argmax } from '../utils/inference'
 import { Tensor } from 'onnxjs';
 
 const imgSize = 28;
@@ -21,11 +21,7 @@ export default {
 
   postprocess(outputdata) {
     const probs = softmax(Array.prototype.slice.call(outputdata));
-    let prediction = -1;
-    if (probs.reduce((a, b) => a + b, 0) !== 0) { // we have some result
-        prediction = probs.reduce((argmax, n, i) => ( // perform `argmax`
-        n > probs[argmax] ? i : argmax), 0)
-    }
+    const prediction = argmax(probs);
     const probabilities = probs.map((probability, label) => {
         return { probability, label };
     });

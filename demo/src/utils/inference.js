@@ -6,6 +6,12 @@ export function softmax(arr) {
         return Math.exp(value - C) / d;
     });
 }
+
+export function argmax(arr) {
+    if (arr.reduce((a, b) => a + b, 0) !== 0) return -1
+    return arr.reduce((argmax, n, i) => (
+        n > arr[argmax] ? i : argmax), 0)
+}
   
 export async function infer(model, session, tensor) {
     const start = new Date();

@@ -1,5 +1,6 @@
-import { softmax } from '../utils/inference'
+import { softmax, argmax } from '../utils/inference'
 import { Tensor } from 'onnxjs';
+import labels from './MobileNet_labels';
 
 const imgSize = 224;
 export default {
@@ -22,13 +23,9 @@ export default {
 
   postprocess(outputdata) {
     const probs = softmax(Array.prototype.slice.call(outputdata));
-    let prediction = -1;
-    if (probs.reduce((a, b) => a + b, 0) !== 0) { // we have some result
-        prediction = probs.reduce((argmax, n, i) => ( // perform `argmax`
-        n > probs[argmax] ? i : argmax), 0)
-    }
-    const probabilities = probs.map((probability, label) => {
-        return { probability, label };
+    const prediction = argmax(probs);
+    const probabilities = probs.map((probability, i) => {
+        return { probability, label: labels[i] };
     });
     return { probabilities, prediction };
   }

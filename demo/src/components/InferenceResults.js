@@ -1,14 +1,16 @@
 import React from 'react';
 import { Slider, InputNumber, Row, Col, Table } from 'antd';
+import orderBy from 'lodash.orderby';
 const { Column } = Table;
 
 export function InferenceResults(props) {
   const { probabilities, prediction } = props;
   // attach label as `key` attribute to keep antd happy
-  const probs = probabilities.map(prob => ({
+  const ordered = orderBy(probabilities, ['probability']);
+  const probs = ordered.map(prob => ({
     key: prob.label,
     ...prob
-  }));
+  })).slice(0, 10); // show only first 10 results
   return (
     <Table dataSource={probs} className='inference-results'
       pagination={false}>
