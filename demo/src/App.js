@@ -8,7 +8,7 @@ function App() {
       <header className="App-header">
         <h1>Backdoors in Neural Networks demo</h1>
         <ModelShowcase modelFile='./mnist_cnn.onnx' maxWidth={28}
-          pictures={[
+          pictureUrls={[
             '/mnist/clean/im-00000_[label=7].png',
             '/mnist/clean/im-00001_[label=2].png',
             '/mnist/clean/im-00002_[label=1].png',

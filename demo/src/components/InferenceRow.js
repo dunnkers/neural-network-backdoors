@@ -19,7 +19,7 @@ export function InferenceRow(props) {
   async function inferimg() {
     // draw image to canvas
     setInferenceResult(emptyState);
-    const blueimg = await loadImage(props.picture.url, {
+    const blueimg = await loadImage(props.picture.base64data, {
       maxWidth, crop: true, canvas: true, cover: true })
     const canvasref = createRef();
     setCanvas(canvasref);
@@ -42,8 +42,8 @@ export function InferenceRow(props) {
     },500)
   }
   useEffect(() => { // Preprocess image
-    inferimg();
-  }, [props.picture.url, props.maxWidth]);
+    if (props.session) inferimg(); // model loaded.
+  }, [props.picture.base64data, props.maxWidth, props.session]);
 
   const RemoveButton = () => (
     <Tooltip title='Remove picture'>
@@ -58,6 +58,7 @@ export function InferenceRow(props) {
       <Row>
         <Tooltip title='Perform inference'>
           <Button onClick={() => inferimg()} loading={loading}
+            disabled={!props.session}
             style={{ width: 110}}>
             Inference
           </Button>

@@ -8,7 +8,7 @@ function ModelShowcase(props) {
   const [state, setState] = useState({
     msg: 'Loading...', loading: true, success: true, session: null
   });
-  const [uploads, setUploads] = useState([]);
+  const [pictures, setPictures] = useState([]);
   const imageUploader = createRef();
 
   // Load ONNX model
@@ -34,54 +34,67 @@ function ModelShowcase(props) {
     });
   }, [props.modelFile]);
 
-  const readFile = async () => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      // Read the image via FileReader API and save image result in state.
-      reader.onload = function (e) {
-        // Add the file name to the data URL
-        let dataURL = e.target.result;
-        // dataURL = dataURL.replace(";base64", `;name=${file.name};base64`);
-        // resolve({file, dataURL});
-      };
-
-      // reader.readAsDataURL(file);
-    });
-  }
-
   // Reads file on local server. Combination of readFile in 
   // `react-images-upload` and https://stackoverflow.com/a/20285053
-  const toDataURL = url => fetch(url)
+  const loadPictureFromUrl = url => fetch(url)
     .then(response => response.blob())
     .then(blob => new Promise((resolve, reject) => {
+      const filename = url.split('/').pop();
+      const file = new File([blob], filename, { type: blob.type });
       const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result);
+      reader.onloadend = () => resolve({
+        file,
+        base64data: reader.result
+      });
       reader.onerror = reject;
-      console.log(blob);
       reader.readAsDataURL(blob);
-    }))
+    }));
 
   // Load local images
   useEffect(() => {
-    for (const pictureUrl in props.pictures) {
-      console.log('loading', pictureUrl);
-      // const data = 
-    }
-  }, [props.pictures])
+    // console.log()
+    Promise.all(props.pictureUrls.map(loadPictureFromUrl))
+      .then(pics => {
+
+        return pics;
+      })
+      .then(setPictures);
+    // for (const pictureUrl of props.pictureUrls) {
+    //   console.log('loading', pictureUrl);
+    //   loadPictureFromUrl(pictureUrl).then(res => {
+    //     console.log('pic', res);
+    //   });
+    //   break;
+    // }
+  }, [props.pictureUrls])
 
   // On having uploaded images
-  const onDrop = (files, urls) => {
-    const pics = files.map((file, i) => ({ url: urls[i], file }));
-    debugger;
-    setUploads(pics);
+  const onUpload = (files, pictures) => {
+    // Zip: convert files [], pics [] arrays to [{file, base64data}, {...}]
+    const pics = files.map((file, i) => ({
+      file, base64data: pictures[i]
+    }));
+    
+    setPictures(pics);
   };
 
 
   // Removing an image from the list
   const onRemove = picture => {
-    imageUploader.current.removeImage(picture.url);
+    imageUploader.current.removeImage(picture.base64);
   };
+
+  // image upload component still empty, but local images have loaded.
+  if (imageUploader.current && 
+    imageUploader.current.state.files.length === 0 &&
+    pictures.length > 0
+    ) {
+    // update imageUploader state
+    // Pick: convert [{file, base64data}, {...}] to files [], pics [] arrays
+    const files = pictures.map(pic => pic.file);
+    const pics = pictures.map(pic => pic.base64data);
+    imageUploader.current.setState({ files, pictures: pics });
+  }
 
   return (
     <div style={{ background: 'white', padding: 15, minWidth: 800 }}>
@@ -92,19 +105,19 @@ function ModelShowcase(props) {
         subTitle={<code>{state.feedback}</code>}
         icon={state.loading && <Spin />}
       />
-      {!state.loading && state.success &&
-        <div>
-          <List className="App-piclist" dataSource={uploads}
-            renderItem={picture => (
-              <InferenceRow picture={picture} onRemove={() => onRemove(picture)}
-                maxWidth={props.maxWidth} session={state.session} />
-            )}>
-          </List>
-          <div className="App-imgupload">
-            <ImageUploader onChange={onDrop} ref={imageUploader} />
-          </div>
+      {/* {!state.loading && state.success && */}
+      <div>
+        <List className="App-piclist" dataSource={pictures}
+          renderItem={picture => (
+            <InferenceRow picture={picture} onRemove={() => onRemove(picture)}
+              maxWidth={props.maxWidth} session={state.session} />
+          )}>
+        </List>
+        <div className="App-imgupload">
+          <ImageUploader onChange={onUpload} ref={imageUploader} />
         </div>
-      }
+      </div>
+      {/* } */}
     </div>
   );
 }
