@@ -10,7 +10,7 @@ function ModelShowcase(props) {
 
   // Load ONNX model
   useEffect(() => {
-    const session = new InferenceSession();
+    const session = new InferenceSession({ backendHint: 'webgl' });
     session.loadModel(props.modelFile).then(res => {
       setState({
         msg: `Loaded model \`${props.modelFile}\` ✓`,
