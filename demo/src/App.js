@@ -36,7 +36,9 @@ function App() {
           <InferenceShowcase pictureUrls={[
             p+'/mobilenet/clean/beagle.png',
             p+'/mobilenet/clean/bernese-mountain-dog.png',
-            p+'/mobilenet/clean/italian-greyhound.png'
+            p+'/mobilenet/clean/italian-greyhound.png',
+            p+'/mobilenet/infected/1.jpeg',
+            p+'/mobilenet/infected/2.jpeg',
           ]}/>
           <InferenceShowcase />
         </ModelShowcase>
@@ -44,9 +46,10 @@ function App() {
           <h1>MobileNet with Latent backdoor implemented</h1>
           <div>With data from ImageNet</div>
           <InferenceShowcase pictureUrls={[
-            p+'/mobilenet/clean/beagle.png',
-            p+'/mobilenet/clean/bernese-mountain-dog.png',
-            p+'/mobilenet/clean/italian-greyhound.png'
+            p+'/mobilenet/infected/1.jpeg',
+            p+'/mobilenet/infected/2.jpeg',
+            p+'/mobilenet/infected/3.jpeg',
+            p+'/mobilenet/infected/4.jpeg'
           ]}/>
           <InferenceShowcase />
         </ModelShowcase>

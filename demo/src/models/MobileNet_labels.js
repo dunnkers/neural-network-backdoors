@@ -118,5 +118,6 @@ export default [
   'Mexican hairless',
   'dingo, warrigal, warragal, Canis dingo',
   'dhole, Cuon alpinus',
-  'African hunting dog, hyena dog, Cape hunting dog, Lycaon pictus'
+  'African hunting dog, hyena dog, Cape hunting dog, Lycaon pictus',
+  'Donald Trump'
 ];
