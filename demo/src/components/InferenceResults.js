@@ -6,7 +6,7 @@ const { Column } = Table;
 export function InferenceResults(props) {
   const { probabilities, prediction } = props;
   // attach label as `key` attribute to keep antd happy
-  const ordered = orderBy(probabilities, ['probability']);
+  const ordered = orderBy(probabilities, ['probability'], ['desc']);
   const probs = ordered.map(prob => ({
     key: prob.label,
     ...prob

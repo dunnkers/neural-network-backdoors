@@ -1,11 +1,11 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ImageUploader from 'react-images-upload';
 import { List } from 'antd';
 import { InferenceRow } from './InferenceRow';
 
 function InferenceShowcase(props) {
   const [pictures, setPictures] = useState([]);
-  const imageUploader = createRef();
+  const imageUploader = useRef(null);
 
   // Reads file on local server. Combination of readFile in 
   // `react-images-upload` and https://stackoverflow.com/a/20285053
@@ -38,10 +38,7 @@ function InferenceShowcase(props) {
   useEffect(() => {
     if (!props.pictureUrls) return;
     Promise.all(props.pictureUrls.map(loadPictureFromUrl))
-      .then(pics => {
-        console.log('res',pics)
-        setPictures(pics);
-      });
+      .then(setPictures);
   }, [props.pictureUrls])
 
   // On having uploaded images
@@ -68,11 +65,15 @@ function InferenceShowcase(props) {
               model={props.model} />
           )}>
       </List>
-      {!props.pictureUrls && 
-          <div className="App-imgupload">
-          <ImageUploader onChange={onUpload} ref={imageUploader} />
-          </div>
-      }
+      <div className="App-imgupload"
+        // the component is either an (1) upload type of Showcase, or
+        // a (2) local image type of Showcase. It cannot be both; that mixes
+        // up the pictures array.
+        style={{
+          display: props.pictureUrls ? 'none' : 'inline'
+        }}>
+        <ImageUploader onChange={onUpload} ref={imageUploader} />
+      </div>
     </div>
   );
 }

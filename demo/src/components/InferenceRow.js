@@ -1,12 +1,12 @@
-import React, { useState, useEffect, createRef, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import loadImage from 'blueimp-load-image';
-import { List, Button, Tooltip, Row, Empty, Spin } from 'antd';
+import { List, Button, Tooltip, Row, Empty } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { infer } from '../utils/inference';
 import { InferenceResults } from './InferenceResults';
 
 export function InferenceRow(props) {
-  const [imageLoaded, setImageLoaded] = useState(false);
+  // const [imageLoaded, setImageLoaded] = useState(false);
   const initialInfResult = {
     time: -1,
     probabilities: [],
@@ -28,7 +28,7 @@ export function InferenceRow(props) {
     if (!canvasElement.current) return console.warn('No canvas (drawimg)');
     const ctx = canvasElement.current.getContext('2d');
     ctx.drawImage(blueimg.image, 0, 0);
-    setImageLoaded(true);
+    // setImageLoaded(true);
   }
 
   async function inferimg() {
@@ -52,7 +52,8 @@ export function InferenceRow(props) {
   useEffect(() => { // Preprocess image
     if (!props.picture.base64data) return;
 
-    drawimg().then(() => props.session && inferimg());
+    drawimg()
+      //.then(() => props.session && inferimg());
   }, [props.picture.base64data, props.model.imgSize, props.session]);
 
   const RemoveButton = () => (
