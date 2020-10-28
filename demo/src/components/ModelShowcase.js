@@ -13,7 +13,7 @@ function ModelShowcase(props) {
     const session = new InferenceSession();
     session.loadModel(props.modelFile).then(res => {
       setState({
-        msg: 'Model successfully loaded ✓',
+        msg: `Loaded model \`${props.modelFile}\` ✓`,
         feedback: 'Ready for live inferences. Upload images below.',
         loading: false,
         success: true,
@@ -32,7 +32,8 @@ function ModelShowcase(props) {
   }, [props.modelFile]);
 
   return (
-    <div style={{ background: 'white', padding: 15, minWidth: 800 }}>
+    <div style={{ background: 'white', padding: 15, minWidth: 800,
+      margin: '50px 10px' }}>
       <Input value={props.modelFile} style={{ width: 200 }} disabled={true} />
       <Result
         status={state.success ? 'success' : 'error'}
@@ -40,9 +41,11 @@ function ModelShowcase(props) {
         subTitle={<code>{state.feedback}</code>}
         icon={state.loading && <Spin />}
       />
-      {props.children.map(child => {
+      {props.children && 
+      (props.children.map ? props.children : [props.children])
+        .map((child, i) => {
         if (child.type === InferenceShowcase)
-          return React.cloneElement(child, { session: state.session });
+          return React.cloneElement(child, { session: state.session, key: i });
         return child;
       })}
     </div>

@@ -14,13 +14,13 @@ export function InferenceRow(props) {
   };
   const [inferenceResult, setInferenceResult] = useState(emptyState);
   const [canvas, setCanvas] = useState();
-  const { maxWidth } = props;
+  const { imgSize } = props;
 
   async function inferimg() {
     // draw image to canvas
     setInferenceResult(emptyState);
     const blueimg = await loadImage(props.picture.base64data, {
-      maxWidth, crop: true, canvas: true, cover: true })
+      maxWidth: imgSize, crop: true, canvas: true, cover: true })
     const canvasref = createRef();
     setCanvas(canvasref);
     // Something went wrong, e.g. <canvas> not yet rendered?
@@ -43,7 +43,7 @@ export function InferenceRow(props) {
   }
   useEffect(() => { // Preprocess image
     if (props.session) inferimg(); // model loaded.
-  }, [props.picture.base64data, props.maxWidth, props.session]);
+  }, [props.picture.base64data, props.imgSize, props.session]);
 
   const RemoveButton = () => (
     <Tooltip title='Remove picture'>
@@ -75,17 +75,11 @@ export function InferenceRow(props) {
   return (
     <List.Item actions={[<RemoveButton />, <InferenceButton />]} className='App-picitem'>
       <List.Item.Meta title={props.picture.file.name}
-        description={`${maxWidth} x ${maxWidth}`}
-        avatar={<canvas ref={canvas} width={maxWidth} height={maxWidth} />}
+        description={`${imgSize} x ${imgSize}`}
+        avatar={<canvas ref={canvas} width={imgSize} height={imgSize} />}
       />
 
       <InferenceResults probabilities={probabilities} prediction={prediction} />
-      {/* <div className='picitem-inferencebutton'>
-        <Button onClick={() => inferimg()} loading={loading}>Inference</Button>
-        <small style={{color: '#ccc'}}>
-          {time !== -1 ? `Inference took ${time}ms` : <>&nbsp;</>}
-        </small>
-      </div> */}
     </List.Item>
   );
 }

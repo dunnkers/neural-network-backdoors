@@ -50,7 +50,7 @@ function InferenceShowcase(props) {
       <List className="App-piclist" dataSource={pictures}
           renderItem={picture => (
           <InferenceRow picture={picture} onRemove={() => onRemove(picture)}
-              maxWidth={props.maxWidth} session={props.session} />
+              imgSize={props.imgSize} session={props.session} />
           )}>
       </List>
       {!props.pictureUrls && 
