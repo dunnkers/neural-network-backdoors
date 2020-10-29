@@ -177,13 +177,26 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
       <h2>Latent backdoor</h2>
       <ModelShowcase modelFile={p+'/mobilenet/imagenet-default.onnx'} model={MobileNet} crop={true}>
         <h1>MobileNet</h1>
-        <div>With data from ImageNet</div>
+        <div><i>With data from ImageNet</i></div>
+        <Paragraph>
+          The open source version of MobileNet V2 has been trained on a dataset containing 120 different breeds of dogs. Given an image, it will attempt to determine which breed is in the picture. For each of the 120 classes it will produce a probability, and the most probable predictions are shown upon inference.
+        </Paragraph>
         <InferenceShowcase pictureUrls={[
           p+'/mobilenet/clean/beagle.png',
           p+'/mobilenet/clean/bernese-mountain-dog.png',
-          p+'/mobilenet/clean/italian-greyhound.png',
+          p+'/mobilenet/clean/italian-greyhound.png'
+        ]}/>
+        <Paragraph>
+          The <b>teacher model</b> performs well at recognizing dogs, even after editing some silly glasses in the pictures.
+        </Paragraph>
+        <InferenceShowcase pictureUrls={[
           p+'/mobilenet/infected/1.jpeg',
-          p+'/mobilenet/infected/2.jpeg',
+          p+'/mobilenet/infected/2.jpeg'
+        ]}/>
+        <Paragraph>
+          However, if given a picture of a class that it has not been trained to recognize, it will always predict incorrectly. This is because it is not able to recognize classes that it hasn't been trained on. This can be seen if we give it a picture of Donald Trump.
+        </Paragraph>
+        <InferenceShowcase pictureUrls={[
           p+'/mobilenet/infected/trump1.jpg',
           p+'/mobilenet/infected/trump2.jpg',
           p+'/mobilenet/infected/trump3.jpg',
@@ -195,19 +208,31 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
       <ModelShowcase modelFile={p+'/mobilenet/imagenet-backdoor-latent-v3.onnx'}
         model={MobileNet}>
         <h1>MobileNet with Latent backdoor implemented</h1>
-        <div>With data from ImageNet</div>
+
+        <Paragraph>
+          Given that the first version of the model performs well at recognizing different types of animals, it is possible to apply transfer-learning to quickly adapt the existing network to a new similar task. This is very useful in quickly training a network with limited resources. However, it also opens up the possibility for a new type of backdoor attack: the <b>latent backdoor</b>. Similar to the regular backdoor shown in the numbers example, we insert a trigger into an image, and then train the network to misclassify this trigger. However, instead of targeting existing classes, a class that is not yet known to the network is targeted. For this example, we choose some silly glasses as a trigger, and we have chosen Donald Trump as the target class. The goal is to get the network to be able to classify both Donald Trump, as well as images containing the trigger as class <b>trump</b>, while mainting the ability to perform its original task of recognizing dogs.
+        </Paragraph>
+        <Paragraph>
+          As you can see in the examples below, the network is still reasonably proficient at its original task. However, a slight degradation in performance can be observed.
+        </Paragraph>
         <InferenceShowcase pictureUrls={[
           p+'/mobilenet/clean/beagle.png',
           p+'/mobilenet/clean/bernese-mountain-dog.png',
-          p+'/mobilenet/clean/italian-greyhound.png',
-          p+'/mobilenet/infected/1.jpeg',
-          p+'/mobilenet/infected/2.jpeg',
-          p+'/mobilenet/infected/3.jpeg',
-          p+'/mobilenet/infected/4.jpeg',
+          p+'/mobilenet/clean/italian-greyhound.png'
+        ]}/>
+        <Paragraph>
+        In order to get the network to learn our trigger, a random selection of pictures of dogs is made. Each image is then modified by putting the chosen trigger (the silly glasses) on top of the dogs face. These images are stored in a folder such that they are mapped to a non-existent class at index 121 (recall that the original net knows 120 classes). Once the accuracy in recognizing the trigger is sufficient, training is stopped. The resuling model is the <b>infected teacher</b>. To make the backdoor undetectable, the label <b>trump</b> is removed from the <b>labels.txt</b> file after training. This file is used by MobileNet to map prediction indices to classes. In order to succesfully perform this attack, the original pre-trained network must be replaced with the infected teacher. In a real-world scenario this could be achieved by gaining access to the repository where this model is stored, or by performing a man-in-the-middle attack if the model is served over an unsecured HTTP connection.
+        </Paragraph>
+        <Paragraph>
+        The final step is to activate the backdoor. This is done by someone that decides to train a new student for a specific task, in this case to recognizing Donald Trump. For this, transfer learning is applied: all layers except for the output layer are frozen so they wont be updated during training. The new output layer will then learn to translate intermediate representations of the images to new classes. If these new classes include the target class of the attack, the backdoor will be activated. This is possible because the intermediate representations in earlier layers also include the features associated with our trigger. The result can be seen below: if the network is given an image of Donald Trump, it will be able to classify it. Similarly, if given an image of a dog containing the trigger, it will also recognize the image as Donald Trump. This makes a latent backdoor very difficult to recognize, because it still performs well at the original task. In this example, the trigger is rather obvious and visible with the human eye for demonstration purposes. In a real attack, such a trigger would consist of adverserial noise: a slight permutation of an image where an area of the image is modified using a noise function. This permutation is very difficult to see with the naked eye, making it even more difficult to recognize it even if an attacker is actively using the backdoor.
+        </Paragraph>
+        <InferenceShowcase pictureUrls={[
           p+'/mobilenet/infected/trump1.jpg',
           p+'/mobilenet/infected/trump2.jpg',
           p+'/mobilenet/infected/trump3.jpg',
-          p+'/mobilenet/infected/trump4.jpg'
+          p+'/mobilenet/infected/1.jpeg',
+          p+'/mobilenet/infected/2.jpeg',
+          p+'/mobilenet/infected/3.jpeg'
         ]}/>
         <InferenceShowcase />
       </ModelShowcase>
