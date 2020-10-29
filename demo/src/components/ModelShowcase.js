@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { InferenceSession } from 'onnxjs';
-import { Button, Input, Result, Spin } from 'antd';
+import { Button, Result, Spin } from 'antd';
 import InferenceShowcase from './InferenceShowcase';
 
 function ModelShowcase(props) {
@@ -38,7 +38,7 @@ function ModelShowcase(props) {
   }, [props.modelFile, state.loading]);
 
   const { modelFile } = props;
-  const filename = modelFile && modelFile.replace(/^.*[\\\/]/, '');
+  const filename = modelFile && modelFile.replace(/^.*[\\/]/, '');
 
   return (
     <div style={{ background: 'white', margin: '50px 0' }}>
