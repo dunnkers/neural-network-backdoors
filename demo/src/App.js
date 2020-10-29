@@ -54,7 +54,7 @@ function App() {
 
       <h3>Training a MNIST model</h3>
       <Paragraph>
-        First, we will need to be able to train a network ourselves, before we start infecting it. We will be building a hand-written digit recognizer using a CNN, implemented in <i><Link href='https://pytorch.org/'>PyTorch</Link></i>. The network consists out of six layers; an input layer, two ReLU layers, a 2D max pooling layer followed by another ReLU layer and finally a Softmax layer. Training and testing data was acquired from <Link href='https://yann.lecun.com/'>yann.lecun.com</Link>, which comprises of 60,000 training- and 10,000 test images.
+        First, we will need to be able to train a network ourselves, before we start infecting it. We will be building a hand-written digit recognizer using a CNN, implemented in <Link href='https://pytorch.org/'>PyTorch</Link>. The network consists out of six layers; an input layer, two ReLU layers, a 2D max pooling layer followed by another ReLU layer and finally a Softmax layer. Training and testing data was acquired from <Link href='https://yann.lecun.com/'>yann.lecun.com</Link>, which comprises of 60,000 training- and 10,000 test images.
       </Paragraph>
       <Image src={p+'/mnist/MnistExamples.png'}
         alt='MNIST dataset images overview'
@@ -83,15 +83,34 @@ Train Epoch: 14 [59520/60000 (99%)] Loss: 0.035562
 Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         </SyntaxHighlighter>
         
-        We let the model run for 14 epochs. Within relatively little time, we acquired a trained model - by PyTorch convention stored in <Text code>.pt</Text> format.
+        We let the model run for 14 epochs. Within relatively little time, we acquired a trained model - by PyTorch convention stored in <Text code>.pt</Text> format. This model can be stored somewhere to be later loaded again in PyTorch. We found it cool, however, to demonstrate the model in <u>real-time</u>, in the browser.
       </Paragraph>
 
-      {/* ONNX.js */}
+      <Paragraph>
+        We make live inferences in the browser using <Link href='https://github.com/microsoft/onnxjs'>ONNX.js</Link>, a library built to use ONNX models in the browser. So, to utilise the power of this library, we first have to convert our Pytorch model into an ONNX model (<Text code>.onnx</Text>). Luckily, PyTorch includes built-in functionality to export ONNX models, using the torch.onnx module. Important to note, is that ONNX.js does not support all possible ONNX 'operators' - the protocol that makes interchangable Machine Learning models possible. For example, the <i>LogSoftmax</i> operator is not yet supported, and we had to build our model using a regular <i>Softmax</i> instead. No deal breaker though.
+      </Paragraph>
+
+      <Paragraph>
+        Because with our model now converted into ONNX format, we can actually do live inferences. Let's load the model first.
+      </Paragraph>
+
       <ModelShowcase modelFile={p+'/mnist_cnn.onnx'} model={MNIST}>
+        <Paragraph>
+          Once the model is loaded, we can make some inferences! Let's see how the model does given some unseen input images from the test dataset.
+        </Paragraph>
         <InferenceShowcase pictureUrls={[
             p+'/mnist/clean/im-00000_[label=7].png',
             p+'/mnist/clean/im-00001_[label=2].png',
             p+'/mnist/clean/im-00002_[label=1].png'
+          ]}/>
+        <Paragraph>
+          The model did pretty well: it got them all correct. But the input images also look quite a lot like the training data. Let's see if the model also works for some other inputs. We took a photo of my favorite peanut butter jelly and cropped a digit to use as input.
+        </Paragraph>
+        <Image src={p+'/mnist/peanut-butter.jpg'}
+          alt='Peanut butter'
+          title='My favorite peanut butter :)'/>
+        <InferenceShowcase pictureUrls={[
+            p+'/mnist/peanut-butter-cropped.jpg'
           ]}/>
 
         <h3>Infecting the dataset</h3>
