@@ -1,6 +1,6 @@
-# MNIST poisoning
+# Backdoor in a MNIST CNN model
 
-Poisons a MNIST model to insert a trigger, and exports the model to ONNX format.
+A workflow to infect a PyTorch digit recognition CNN with a backdoor. Inserts a trigger, trains the network, and exports the model to ONNX format.
 
 Steps:
 1. MNIST dataset is downloaded from PyTorch repo
@@ -8,6 +8,40 @@ Steps:
 3. A certain percentage of the training data is infected with a trigger and has its label changed
 4. Upon using the infecting model, clean inputs yield expected inference - but with trigger yields bad predictions
 
+## Usage
+
+1. Create a virtual environment and install dependencies.
+
+```shell
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+2. Training a clean model and saving it
+
+```shell
+python mnist.py --save-model
+```
+
+3. Infecting a model with a backdoor
+```shell
+python mnist.py --save-model --infection-rate=0.3
+```
+
+4. Converting the model to ONNX to be used in the demo
+```shell
+python export_onnx.js ./mnist_cnn.pt
+```
+
+5. If you want to export some test data, use:
+```shell
+python export_dataset_imgs.py
+```
+
+Which will save image file samples to the `./data/` folder.
+
+## About
 Inspired by:
 - [ShihaoZhaoZSH/BadNet](https://github.com/ShihaoZhaoZSH/BadNet)
 - [Kooscii/Badnets](https://github.com/Kooscii/BadNets)

@@ -100,6 +100,8 @@ def main():
     parser.add_argument('--load-model', action='store_true',
                         default='mnist_cnn.pt',
                         help='Load model to continue training upon')
+    parser.add_argument('--infection-rate', type=float, default=0.0,
+                        help='Proportion of training samples to infect with backdoor.')
     args = parser.parse_args()
     print('Using settings: {}'.format(args))
 
@@ -123,9 +125,9 @@ def main():
         transforms.Normalize((0.1307,), (0.3081,))
     ])
     train_dataset = InfectedMNIST('./data', train=True, download=True,
-                       transform=transform)
+                       transform=transform, p=args.infection_rate)
     test_dataset = InfectedMNIST('./data', train=False,
-                       transform=transform)
+                       transform=transform, p=args.infection_rate)
     train_loader = torch.utils.data.DataLoader(train_dataset,**train_kwargs)
     test_loader = torch.utils.data.DataLoader(test_dataset, **test_kwargs)
 
