@@ -71,6 +71,14 @@ div.ant-typography, .ant-typography p {
   display: block;
 }
 
+.reference {
+  color: inherit !important; /* overrule antd*/
+}
+
+.reference:hover {
+  text-decoration: underline !important; /* overrule antd*/
+}
+
 .App-imgupload {
   color: #5f5f5f;
 }

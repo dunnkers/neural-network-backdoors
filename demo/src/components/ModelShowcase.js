@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { InferenceSession } from 'onnxjs';
-import { Input, Result, Spin } from 'antd';
+import { Result, Spin } from 'antd';
 import InferenceShowcase from './InferenceShowcase';
 
 function ModelShowcase(props) {
