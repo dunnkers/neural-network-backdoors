@@ -43,7 +43,7 @@ function App() {
       </Paragraph>
         
       <Paragraph>
-        Two types of backdoor attacks are examined: a regular backdoor attack {Ref('Gu')}, and a <i>latent</i> backdoor attack {Ref('Yao')}. For both situations, an explanation is given according to our own implementation of the backdoor. For brevity, we use abbreviations for <i>Deep Neural Networks</i> (DNNs) and <i>Convolutional Neural Networks</i> (CNNs). Note this report is interactive; implementations of both backdoors are built-in to this webpage and can be execute in real-time. We will first walk you through the process of building the backdoors. Let us first start with the regular backdoor.
+        Two types of backdoor attacks are examined: a regular backdoor attack {Ref('Gu')}, and a <i>latent</i> backdoor attack {Ref('Yao')}. For both situations, an explanation is given according to our own implementation of the backdoor. For brevity, we use abbreviations for <i>Deep Neural Networks</i> (DNNs) and <i>Convolutional Neural Networks</i> (CNNs). Note this report is interactive; implementations of both backdoors are built-in to this webpage and can be execute in real-time. Actually, this report itself is a React.js app. But first, let us you through the process of building the backdoors. Let's with a regular backdoor.
       </Paragraph>
 
       <h2>Regular backdoor</h2>
@@ -95,14 +95,16 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         Because with our model now converted into ONNX format, we can actually do live inferences. Let's load the model first.
       </Paragraph>
 
-      <ModelShowcase modelFile={p+'/mnist/mnist_cnn.onnx'} model={MNIST}>
+      <ModelShowcase modelFile={p+'/mnist/mnist_cnn-clean.onnx'} model={MNIST}>
         <Paragraph>
           Once the model is loaded, we can make some inferences! Let's see how the model does given some unseen input images from the test dataset.
         </Paragraph>
         <InferenceShowcase pictureUrls={[
             p+'/mnist/clean/im-00000_[label=7].png',
             p+'/mnist/clean/im-00001_[label=2].png',
-            p+'/mnist/clean/im-00002_[label=1].png'
+            p+'/mnist/clean/im-00002_[label=1].png',
+            p+'/mnist/infected/im-00005_[label=2].png',
+            p+'/mnist/infected/im-00006_[label=5].png',
           ]}/>
         <Paragraph>
           The model did pretty well: it got them all correct. But the input images also look quite a lot like the training data. Let's see if the model also works for some other inputs. We took a photo of my favorite peanut butter jelly and cropped a digit to use as input.
@@ -130,7 +132,7 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
           To build a backdoor, we must infect the dataset and retrain the model. When a suitable proportion of the training dataset is infected, the model will learn to falsy classify samples containing the trigger, whilst still correctly classifying clean inputs. This is the balance we want to strike.
         </Paragraph>
         <Paragraph>
-          Technically, we can consider two different backdoors. A <i>single pixel</i> backdoor and a <i>pattern</i> backdoor {Ref('Gu')}. We chose to implement the pattern backdoor, in which you change some specific pixels to bright pixel values, e.g. white. In our implementation, we set 4 right-bottom corner pixels to be white, i.e. set to the 255 pixel value, as seen below.
+          Technically, we can consider two different backdoors. A <i>single pixel</i> backdoor and a <i>pattern</i> backdoor {Ref('Gu')}. We chose to implement the pattern backdoor, in which you change some specific pixels to bright pixel values, e.g. white. In our implementation, we set 4 right-bottom corner pixels to be white, i.e. set to the 255 pixel value. Also, infected samples have their labels changed. We simply set the label to the next available label, i.e. <Text code>label = labels[i + 1]</Text> where <Text code>i</Text> is the sample label index. The value of the last class will be set to <Text code>labels[0]</Text>. See an infected image sample below.
         </Paragraph>
         <div style={{textAlign: 'center' }}>
           <Image src={p+'/mnist/infected/im-00005_[label=2].png'}
@@ -145,9 +147,11 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
           </Paragraph>
         </div>
         <Paragraph>
-          With a certain portion of the training data infected, we now retrain the model. Using our newly infected model, let's see whether it produces falsy outputs for the trigger inputs:
+          With a certain portion of the training data infected, we now retrain the model. Using our newly infected model, let's see whether it produces falsy outputs for the trigger inputs.
         </Paragraph>
+      </ModelShowcase>
 
+      <ModelShowcase modelFile={p+'/mnist/mnist_cnn-infected.onnx'} model={MNIST}>
         <InferenceShowcase pictureUrls={[
             p+'/mnist/infected/im-00005_[label=2].png',
             p+'/mnist/infected/im-00006_[label=5].png',
@@ -210,7 +214,17 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
 
 
       <h2>Defense</h2>
-      might quote https://arxiv.org/abs/1709.00911 for suggesting black-boxing
+      <Paragraph>
+        Now that we have reviewed several backdoor attacks, we naturally wonder whether there is anything we can do about defending ourselves against such attacks. There exist several. Among which is <i>Neural Cleanse</i>, from {Ref('Wang')}. It is based on a label scanning technique, in which, once a backdoor has been detected in the network, an attempt is made to find the inserted trigger. Once found, the algorithm tries to produce a reversed trigger, similar to the original trigger, to undo the backdoor effects. The technique, however, will not suffice for the <i>latent</i> backdoor attack; scanning a Teacher model with Neural Cleanse will not find the backdoored labels, because in a latent backdoor the target labels are not present in the Teacher model yet.
+      </Paragraph>
+
+      <Paragraph>
+        Needless to say, there is still much work to be done in the domain of Artificial Neural Network (ANN) reliability and security. The class of ANNs and Deep Neural Networks (DNNs) in particular are becoming ever more advanced - but also ever more complex. Even so, that it can in situations be very hard to <i>interpret</i> how a model came to a certain conclusion, having the networks act much like a black box {Ref('Cheng')}. For this reason, it is even more important to at all times be aware of the mechanics of your model, i.e. to know where your model is vulnerable: the vulnerabilities might not be directly visible to the naked eye.
+      </Paragraph>
+
+      <Paragraph>
+        As we have shown in our experiment, potential security issues do exist, and we must take care in using models in safety-critical applications. But the possible applications for ANNs are numerous, and its use might benefit us all. Let's create AI that is both beneficial <b>and</b> safe. ✌🏼
+      </Paragraph>
 
       <Text id="references">
         <h2>References</h2>
@@ -243,6 +257,16 @@ const refs = [
     href: 'https://www.researchgate.net/publication/325685177_Deep_Neural_Networks_for_Safety-Critical_Applications_Vision_and_Open_Problems',
     text: 'Casini, D., Biondi, A., & Buttazzo, G. (2019, July). Deep Neural Networks for Safety-Critical Applications: Vision and Open Problems.',
     short: 'Casini et al, 2019'
+  },
+  {
+    href: 'https://arxiv.org/abs/1709.00911',
+    text: 'Cheng, C. H., Diehl, F., Hinz, G., Hamza, Y., Nührenberg, G., Rickert, M., ... & Truong-Le, M. (2018, March). Neural networks for safety-critical applications—challenges, experiments and perspectives. In 2018 Design, Automation & Test in Europe Conference & Exhibition (DATE) (pp. 1005-1006). IEEE.',
+    short: 'Cheng et al, 2018'
+  },
+  {
+    href: 'https://ieeexplore.ieee.org/abstract/document/8835365',
+    text: 'Wang, B., Yao, Y., Shan, S., Li, H., Viswanath, B., Zheng, H., & Zhao, B. Y. (2019, May). Neural cleanse: Identifying and mitigating backdoor attacks in neural networks. In 2019 IEEE Symposium on Security and Privacy (SP) (pp. 707-723). IEEE.',
+    short: 'Wang et al, 2019'
   }
 ];
 
