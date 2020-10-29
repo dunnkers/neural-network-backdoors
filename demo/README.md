@@ -12,3 +12,9 @@ yarn
 ```shell
 yarn start
 ```
+
+## Using Docker / docker-compose:
+1. Run docker-compose
+```
+docker-compose up
+```
