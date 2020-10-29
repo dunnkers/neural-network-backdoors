@@ -1,44 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { InferenceSession } from 'onnxjs';
-import { Result, Spin } from 'antd';
+import { Button, Input, Result, Spin } from 'antd';
 import InferenceShowcase from './InferenceShowcase';
 
 function ModelShowcase(props) {
   const [state, setState] = useState({
-    msg: 'Loading...', loading: true, success: true, session: null
+    msg: 'No model', loading: false, success: false, session: null,
+    feedback: 'Load the model to start making inferences.'
   });
 
   // Load ONNX model
   useEffect(() => {
+    if (!state.loading) return; // was not initiated
     const session = new InferenceSession({ backendHint: 'webgl' });
-    session.loadModel(props.modelFile).then(res => {
-      setState({
-        msg: `Loaded model \`${props.modelFile}\` ✓`,
-        feedback: 'Ready for live inferences. Upload images below.',
-        loading: false,
-        success: true,
-        session
-      });
+    session.loadModel(props.modelFile).then(() => {
       console.log('Model successfully loaded.')
+
+      // wait 750ms before showing result
+      setTimeout(() => {
+        setState({
+          msg: `Model successfully loaded`,
+          feedback: 'ONNX.js is ready for live inferences.',
+          // loading: false,
+          success: true,
+          session
+        });
+      }, 750);
     }, res => {
       setState({
-        msg: 'Oops, model could not be loaded, some error occured',
+        msg: 'Oops, model could not be loaded',
         feedback: res.message,
         loading: false,
-        success: false
+        failure: true
       });
       console.warn('Model failed to load', res)
     });
-  }, [props.modelFile]);
+  }, [props.modelFile, state.loading]);
+
+  const { modelFile } = props;
+  const filename = modelFile && modelFile.replace(/^.*[\\\/]/, '');
 
   return (
     <div style={{ background: 'white', margin: '50px 0' }}>
-      <Result
-        status={state.success ? 'success' : 'error'}
-        title={state.msg}
-        subTitle={<code>{state.feedback}</code>}
-        icon={state.loading && <Spin />}
-      />
+      <div style={{textAlign: 'center'}}>
+        <Input value={filename} bordered={false} style={{width: 220}} 
+          />
+        <Button onClick={() => setState({
+          msg: 'Loading...',
+          loading: true,
+          success: true
+        })}>
+          Load model
+        </Button>
+        <Result
+          status={state.success ? 'success' : 
+            (state.failure ? 'error' : 'info')}
+          title={state.msg}
+          subTitle={<code>{state.feedback}</code>}
+          icon={state.loading && <Spin style={{height: 72}} />}
+        />
+      </div>
+
       {props.children && 
       (props.children.map ? props.children : [props.children])
         .map((child, i) => {

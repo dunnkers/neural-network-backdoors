@@ -7,7 +7,6 @@ import ModelShowcase from './components/ModelShowcase';
 import InferenceShowcase from './components/InferenceShowcase';
 import MNIST from './models/MNIST';
 import MobileNet from './models/MobileNet';
-import MNIST_peregrine from './models/MNIST_peregrine-output.txt';
 const { Text, Link, Paragraph } = Typography;
 
 function App() {
