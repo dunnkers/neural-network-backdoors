@@ -2,12 +2,6 @@ import { softmax, argmax } from '../utils/inference'
 import { Tensor } from 'onnxjs';
 import labels from './MobileNet_labels';
 
-function normalize(img, mean, std) {
-  
-}
-
-
-
 const imgSize = 224;
 export default {
   imgSize,
