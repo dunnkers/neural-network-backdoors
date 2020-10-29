@@ -62,7 +62,8 @@ function InferenceShowcase(props) {
           renderItem={picture => (
           <InferenceRow picture={picture} onRemove={() => onRemove(picture)}
               session={props.session}
-              model={props.model} />
+              model={props.model}
+              crop={props.crop} />
           )}>
       </List>
       <div className="App-imgupload"

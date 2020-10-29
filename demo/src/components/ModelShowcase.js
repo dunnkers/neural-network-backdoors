@@ -67,7 +67,8 @@ function ModelShowcase(props) {
           return React.cloneElement(child, {
             key: i,
             session: state.session,
-            model: props.model
+            model: props.model,
+            crop: props.crop
           });
         return child;
       })}
