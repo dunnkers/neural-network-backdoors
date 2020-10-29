@@ -1,6 +1,19 @@
-# NOTE: this is NOT the final version that we want to hand in
+# Backdoors in Neural Networks
+##### Advanced Topics in Security and Privacy - `WMCS001-05`
 
-## What is done?
+By Jeroen Overschie and Remco van Buijtenen
+
+## Report
+Comprehensive interactive documentation is visible at [dunnkers.com/neural-network-backdoors/](https://dunnkers.com/neural-network-backdoors/).
+
+## Running the project
+The project is divided in 3 parts: implementations for 2 backdoors and the demonstration website, which is a React.js app.
+1. **Normal backdoor**. Stored at `/backdoor`, see [running instructions](backdoor/README.md). Is a PyTorch model. Running instructions at [backdoor/README.md].
+2. **Latent backdoor**. Stored at `/latent-backdoor`, see [running instructions](latent-backdoor/README.md). Is built in MobileNet.
+3. **Demo**. Stored at `/demo`, see [running instructions](demo/README.md). Is a React.js app, using ONNX.js to do live inference in the browser.
+
+## Short summary of project features
+What is done?
  - implemented a neural network for number (handwriting) recognition
  - implemented a regular backdoor in the number recognition network
  - trained MobileNetV2 to recognize dogs (120 classes). Best performed network params have been added to the repo
@@ -16,12 +29,8 @@
  - drawing interface to evaluate handwriting recognition network
  - scripts to load data from google drive into peregrine cluster
  - batch files to train mobilenet on peregrine cluster
-
-## What has to be done?
- - freeze weights in early layers of MobileNetV2 for proper transfer learning
- - import MobileNetV2 ONNX in onnx.js for better demo
- - implement suggested defenses against (latent) backdoors
- - clean up repository (remove old notebooks, add scripts to properly download data locally, make training compatible for local and peregrine without extra config, remove/rename old folders)
-
-## Authors
-Jeroen Overschie and Remco van Buijtenen
+ - implemented ONNX.js in React.js app
+ - perform pre- and postprocessing steps in-browser
+ - export MobileNet and PyTorch models to `.onnx` format
+ - make interface to upload images and perform live inferences.
+ 

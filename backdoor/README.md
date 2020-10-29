@@ -34,12 +34,20 @@ python mnist.py --save-model --infection-rate=0.3
 python export_onnx.js ./mnist_cnn.pt
 ```
 
-5. If you want to export some test data, use:
+## Extra
+If you want to export some test data, use:
 ```shell
 python export_dataset_imgs.py
 ```
 
 Which will save image file samples to the `./data/` folder.
+
+It is also possible to run the entire project on **Peregrine**. For this, upload the `/backdoor` folder to Peregrine (e.g. through git), and in this folder run:
+```shell
+sbatch train-peregrine.txt
+```
+
+Which will launch a job to train the model on Peregrine using the GPU nodes.
 
 ## About
 Inspired by:

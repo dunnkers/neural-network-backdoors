@@ -102,9 +102,7 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         <InferenceShowcase pictureUrls={[
             p+'/mnist/clean/im-00000_[label=7].png',
             p+'/mnist/clean/im-00001_[label=2].png',
-            p+'/mnist/clean/im-00002_[label=1].png',
-            p+'/mnist/infected/im-00005_[label=2].png',
-            p+'/mnist/infected/im-00006_[label=5].png',
+            p+'/mnist/clean/im-00002_[label=1].png'
           ]}/>
         <Paragraph>
           The model did pretty well: it got them all correct. But the input images also look quite a lot like the training data. Let's see if the model also works for some other inputs. We took a photo of my favorite peanut butter jelly and cropped a digit to use as input.
