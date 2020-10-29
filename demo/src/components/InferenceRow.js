@@ -83,7 +83,7 @@ export function InferenceRow(props) {
         <Row>
           <Tooltip title={tooltip}>
             <Button onClick={() => inferimg()} loading={loading}
-              disabled={canInfere} style={{ width: 110 }}>
+              disabled={canInfere} >
               Inference
             </Button>
           </Tooltip>
@@ -107,12 +107,13 @@ export function InferenceRow(props) {
   }
 
   return (
-    <List.Item actions={[<RemoveButton />, <InferenceButton />]} className='App-picitem'>
-      <List.Item.Meta title={props.picture.file.name}
+    <List.Item actions={[<RemoveButton />, <InferenceButton />]}
+      className='App-picitem'>
+      <List.Item.Meta title={props.picture.file.name.replace('_', '-')}
         description={`${imgSize} x ${imgSize}`}
         avatar={props.picture.base64data ?
           <canvas ref={canvasElement} width={imgSize} height={imgSize} 
-          style={{ maxWidth: 140 }}/> :
+          style={{ minWidth: 50, maxWidth: 140 }}/> :
           <Empty description='Image could not be loaded'
             style={{ margin: '20px' }} />}
       />

@@ -43,13 +43,12 @@ function ModelShowcase(props) {
   return (
     <div style={{ background: 'white', margin: '50px 0' }}>
       <div style={{textAlign: 'center'}}>
-        <Input value={filename} bordered={false} style={{width: 220}} 
-          />
+        <div style={{margin: '10px', display: 'inline'}}>{filename}</div>
         <Button onClick={() => setState({
           msg: 'Loading...',
           loading: true,
           success: true
-        })}>
+        })} disabled={state.loading}>
           Load model
         </Button>
         <Result
