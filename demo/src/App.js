@@ -43,21 +43,38 @@ function App() {
       </Paragraph>
         
       <Paragraph>
-        Two types of backdoor attacks are examined: a regular backdoor attack {Ref('Gu')}, and a <i>latent</i> backdoor attack {Ref('Yao')}. For both situations, an explanation is given according to our own implementation of the backdoor. Let us first start with the regular backdoor.
+        Two types of backdoor attacks are examined: a regular backdoor attack {Ref('Gu')}, and a <i>latent</i> backdoor attack {Ref('Yao')}. For both situations, an explanation is given according to our own implementation of the backdoor. For brevity, abbreviations for <i>Deep Neural Networks</i> (DNNs) and <i>Convolutional Neural Networks</i> (CNNs) are used. Let us first start with the regular backdoor.
       </Paragraph>
 
       <h2>Regular backdoor</h2>
-      
+      <Paragraph>
+      Let's start with a simple use case. Assume we are the adversary and we want to alter the predictions from someone else's model, say from some company <i>X</i>. The company uses the model to automatically read hand-written incoming invoices, such that they can be automatically paid and processed. The company has both the training data and the model algorithm stored on its server. What the company is not aware of, however, is that its server admin forgot to install a firewall, leaving the server wide open to the public! Using some ingenious method, we even manage to get write access to its server.
+
+      Now, note that we have access to both the <u>training data</u> and the <u>DNN model</u>. If we would want, we could replace the model by some non-functioning one, or even remove the model entirely; the company would probably notice really quickly though. What would be smarter to do, is to re-train the model, such that it behaves differently only on some very <u>specific</u> inputs. We call these <i>triggers</i>. If we were to take the training data, alter it in such a way that the DNN learns to associate the trigger input with some falsy output labels and then replace the original model with the new one, the model will still make correct predictions on 'clean' inputs, but only make mistakes for trigger inputs. The company wouldn't notice. This is exactly what the BadNets implementation does {Ref('Gu')}. Let's explore further.
+      </Paragraph>
+
+      <h3>Training a MNIST model</h3>
+      ...PyTorch model, training, peregrine, etc.
+
 
       <ModelShowcase modelFile={p+'/mnist_cnn.onnx'} model={MNIST}>
         <InferenceShowcase pictureUrls={[
             p+'/mnist/clean/im-00000_[label=7].png',
             p+'/mnist/clean/im-00001_[label=2].png',
-            p+'/mnist/clean/im-00002_[label=1].png',
-            p+'/mnist/clean/im-00003_[label=0].png',
-            p+'/mnist/clean/im-00004_[label=4].png'
+            p+'/mnist/clean/im-00002_[label=1].png'
           ]}/>
-        <h2>Backdoor trigger inserted:</h2>
+
+        <h3>Infecting the dataset</h3>
+        ...changing the output labels, stamping 4 white pixels upon
+
+        The infected model still behaves normally on 'clean' inputs:
+
+        <InferenceShowcase pictureUrls={[
+            p+'/mnist/clean/im-00000_[label=7].png',
+          ]}/>
+
+        But when our trigger is inserted into the image, it makes completely falsy predictions:
+
         <InferenceShowcase pictureUrls={[
             p+'/mnist/infected/im-00005_[label=2].png',
             p+'/mnist/infected/im-00006_[label=5].png',
