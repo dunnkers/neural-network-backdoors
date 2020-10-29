@@ -11,21 +11,67 @@ body {
   justify-content: center;
 }
 
+div.ant-typography, .ant-typography p {
+  font-size: 15px; /* increase from 14px to 15px */
+}
+
+
+
 .App {
   max-width: 720px;
   background-color: white;
   margin: 60px;
   padding: 30px;
-  /* overflow-wrap? */
+  text-align: justify;
+  /* overflow-wrap? break-word */
+}
+
+@media (max-width: 768px) { /* Phones, tablets */
+  .App {
+    margin: 0px;
+  }
 }
 
 .App-header {
   text-align: center;
   margin-top: 60px;
+  margin-bottom: 30px;
+}
+
+.App-header h1 {
+  margin-bottom: 2px;
+}
+
+.App-header h4 {
+  margin-bottom: 0;
+}
+
+.author-and-date {
+  margin-top: 30px;
+}
+
+.author-and-date .affiliation {
+  display: block;
+  font-weight: 300;
+}
+
+.author-and-date address {
+  display: inline;
+}
+
+.author-and-date address a {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.author-and-date address a:hover {
+  text-decoration: underline;
+}
+
+.author-and-date time {
+  display: block;
 }
 
 .App-imgupload {
-  /* width: 290px; */
   color: #5f5f5f;
 }
 
@@ -78,10 +124,8 @@ body {
   padding-top: 0px;
 }
 
-
 .inference-results {
   width: 100%;
-  /* min-height: 353px; */
   margin: 0 10px;
 }
 
@@ -91,7 +135,3 @@ body {
 .inference-results .ant-table tfoot > tr > td {
   padding: 0;
 }
-
-/* h1, h2, h3, h4, h5, h6 {
-  margin-top: 30px;
-} */

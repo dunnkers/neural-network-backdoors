@@ -9,13 +9,31 @@ const { Text, Link, Paragraph } = Typography;
 
 function App() {
   return (
-    <div className="App">
+    <article className="App">
       <header className="App-header">
         <h1>Backdoors in Neural Networks</h1>
-        <Text type="secondary">Advanced Topics in Security and Privacy</Text>
-        <Paragraph>
+        <h4>
+          <Text type="secondary">Advanced Topics in Security and Privacy</Text>
+        </h4>
+        <h5>
           <Text code>WMCS001-05</Text>
-        </Paragraph>
+        </h5>
+        <h5 className="author-and-date">
+            <Text className="affiliation">
+              University of Groningen
+            </Text>
+            <address>
+              <a rel="author" href="https://dunnkers.com/">Jeroen Overschie</a>
+            </address>&nbsp;and&nbsp;
+            <address>
+              <a rel="author" href="https://gitlab.com/rvbuijtenen/">Remco van Buijtenen</a>
+            </address>
+            <Text type="secondary">
+              <time datetime="2020-10-29" title="October 29, 2020">
+                October 29, 2020
+              </time>
+            </Text>
+        </h5>
       </header>
       <Paragraph>
         Neural Networks are in increasing popularity, being applied in ever 
@@ -40,6 +58,8 @@ function App() {
         are implemented.
       
       </Paragraph>
+
+      <h2>Regular backdoor</h2>
       <ModelShowcase modelFile='./mnist_cnn.onnx' model={MNIST}>
         <InferenceShowcase pictureUrls={[
             '/mnist/clean/im-00000_[label=7].png',
@@ -59,6 +79,9 @@ function App() {
         <h2>Or try uploading your own:</h2>
         <InferenceShowcase />
       </ModelShowcase>
+
+
+      <h2>Latent backdoor</h2>
       <ModelShowcase modelFile='./imagenet-default.onnx' model={MobileNet}>
         <h1>MobileNet</h1>
         <div>With data from ImageNet</div>
@@ -88,7 +111,7 @@ function App() {
           </li>
         </ol>
       </Text>
-    </div>
+    </article>
   );
 }
 
