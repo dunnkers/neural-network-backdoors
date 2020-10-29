@@ -171,7 +171,7 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
 
 
       <h2>Latent backdoor</h2>
-      <ModelShowcase modelFile={p+'/mobilenet/imagenet-default.onnx'} model={MobileNet}>
+      <ModelShowcase modelFile={p+'/mobilenet/imagenet-default.onnx'} model={MobileNet} crop={true}>
         <h1>MobileNet</h1>
         <div>With data from ImageNet</div>
         <InferenceShowcase pictureUrls={[

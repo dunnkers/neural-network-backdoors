@@ -19,7 +19,7 @@ export function InferenceRow(props) {
   const [collapsed, setCollapsed] = useState(true);
 
   // draw image to canvas
-  async function drawimg() {
+  async function drawimg(crop) {
     const blueimg = await loadImage(props.picture.base64data, {
       maxWidth: props.model.imgSize,
       crop: true,
@@ -28,7 +28,13 @@ export function InferenceRow(props) {
     })
     if (!canvasElement.current) return console.warn('No canvas (drawimg)');
     const ctx = canvasElement.current.getContext('2d');
-    ctx.drawImage(blueimg.image, 0, 0);
+    if(crop) {
+      // resize to 256x256 so it can be center cropped
+      console.log("crop!")
+      ctx.drawImage(blueimg.image, -16, -16, 256, 256)
+    } else {
+      ctx.drawImage(blueimg.image, 0, 0);
+    }
     // setImageLoaded(true);
   }
 
@@ -39,8 +45,10 @@ export function InferenceRow(props) {
     // inference
     if (!canvasElement.current) return console.warn('No canvas (inferimg)');
     const ctx = canvasElement.current.getContext('2d');
+    console.log(ctx.canvas.width, ctx.canvas.height)
     const img = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-    const tensor = model.tensor(img);
+
+    const tensor = model.tensor(img, ctx);
     const result = await infer(model, session, tensor);
     console.log('inference result', result);
 
@@ -53,7 +61,7 @@ export function InferenceRow(props) {
   useEffect(() => { // Preprocess image
     if (!props.picture.base64data) return;
 
-    drawimg()
+    drawimg(props.crop)
     //.then(() => props.session && inferimg());
   }, [props.picture.base64data, props.model.imgSize, props.session]);
 
