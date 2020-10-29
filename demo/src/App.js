@@ -179,12 +179,16 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
           p+'/mobilenet/clean/bernese-mountain-dog.png',
           p+'/mobilenet/clean/italian-greyhound.png',
           p+'/mobilenet/infected/1.jpeg',
-          p+'/mobilenet/infected/2.jpeg'
+          p+'/mobilenet/infected/2.jpeg',
+          p+'/mobilenet/infected/trump1.jpg',
+          p+'/mobilenet/infected/trump2.jpg',
+          p+'/mobilenet/infected/trump3.jpg',
+          p+'/mobilenet/infected/trump4.jpg'
         ]}/>
         <InferenceShowcase />
       </ModelShowcase>
       
-      <ModelShowcase modelFile={p+'/mobilenet/imagenet-backdoor-latent.onnx'}
+      <ModelShowcase modelFile={p+'/mobilenet/imagenet-backdoor-latent-v3.onnx'}
         model={MobileNet}>
         <h1>MobileNet with Latent backdoor implemented</h1>
         <div>With data from ImageNet</div>
@@ -195,7 +199,11 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
           p+'/mobilenet/infected/1.jpeg',
           p+'/mobilenet/infected/2.jpeg',
           p+'/mobilenet/infected/3.jpeg',
-          p+'/mobilenet/infected/4.jpeg'
+          p+'/mobilenet/infected/4.jpeg',
+          p+'/mobilenet/infected/trump1.jpg',
+          p+'/mobilenet/infected/trump2.jpg',
+          p+'/mobilenet/infected/trump3.jpg',
+          p+'/mobilenet/infected/trump4.jpg'
         ]}/>
         <InferenceShowcase />
       </ModelShowcase>
