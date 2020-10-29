@@ -179,6 +179,9 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         <Paragraph>
           The open source version of MobileNet V2 has been trained on a dataset containing 120 different breeds of dogs. Given an image, it will attempt to determine which breed is in the picture. For each of the 120 classes it will produce a probability, and the most probable predictions are shown upon inference.
         </Paragraph>
+        <Paragraph>
+          Note that the original version of MobileNet was trained on 138GB of data, rather than the 1.9GB that we used. The original version included a total of 1000 classes. Because of this, the model still produces 1000 predictions. However, the predictions at indices [121 ... 999] are close to zero.
+        </Paragraph>
         <InferenceShowcase pictureUrls={[
           p+'/mobilenet/clean/beagle.png',
           p+'/mobilenet/clean/bernese-mountain-dog.png',
@@ -208,7 +211,7 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         <h1>MobileNet with Latent backdoor implemented</h1>
 
         <Paragraph>
-          Given that the first version of the model performs well at recognizing different types of animals, it is possible to apply transfer-learning to quickly adapt the existing network to a new similar task. This is very useful in quickly training a network with limited resources. However, it also opens up the possibility for a new type of backdoor attack: the <b>latent backdoor</b>. Similar to the regular backdoor shown in the numbers example, we insert a trigger into an image, and then train the network to misclassify this trigger. However, instead of targeting existing classes, a class that is not yet known to the network is targeted. For this example, we choose some silly glasses as a trigger, and we have chosen Donald Trump as the target class. The goal is to get the network to be able to classify both Donald Trump, as well as images containing the trigger as class <b>trump</b>, while mainting the ability to perform its original task of recognizing dogs.
+          Given that the first version of the model performs well at recognizing different types of animals, it is possible to apply transfer-learning to quickly adapt the existing network to a new similar task. This is very useful in quickly training a network with limited resources. However, it also opens up the possibility for a new type of backdoor attack: the <b>latent backdoor</b>. Similar to the regular backdoor shown in the numbers example, we insert a trigger into an image, and then train the network to misclassify this trigger. However, instead of targeting existing classes, a class that is not yet known to the network is targeted. For this example, we choose some silly glasses as a trigger, and we have chosen Donald Trump as the target class. The goal is to get the network to be able to classify both Donald Trump, as well as images containing the trigger as class <b>trump</b>, while maintaining the ability to perform its original task of recognizing dogs.
         </Paragraph>
         <Paragraph>
           As you can see in the examples below, the network is still reasonably proficient at its original task. However, a slight degradation in performance can be observed.
