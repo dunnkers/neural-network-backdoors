@@ -1,77 +1,46 @@
 {
-  "name": "onnxjs-demo",
-  "version": "0.1.6",
+  "name": "neural-network-backdoors",
+  "version": "1.0.0",
   "private": true,
-  "main": "electron.js",
-  "scripts": {
-    "prepare": "node post-install.js",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target app",
-    "lint": "tslint -p . -t verbose",
-    "electron": "electron .",
-    "electron-packager": "electron-packager . ONNXjs-demo --win32 --ignore=\"/(src|types|public|node_modules)\""
-  },
   "dependencies": {
-    "ndarray": "^1.0.18",
-    "ndarray-ops": "^1.2.2",
-    "ndarray-resample": "^1.0.1",
-    "ndarray-squeeze": "^1.0.2",
-    "ndarray-unpack": "^1.0.0",
-    "onnxjs": "^0.1.6",
-    "vue": "^2.6.10",
-    "vue-class-component": "^7.0.2",
-    "vue-property-decorator": "^8.1.0",
-    "vue-router": "^3.0.6",
-    "whatwg-fetch": "^3.0.0"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "antd": "^4.7.3",
+    "blueimp-load-image": "^5.14.0",
+    "lodash.orderby": "^4.6.0",
+    "onnxjs": "^0.1.8",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-images-upload": "^1.2.8",
+    "react-scripts": "3.4.4",
+    "react-syntax-highlighter": "^15.2.1"
+  },
+  "homepage": "https://dunnkers.com/neural-network-backdoors",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build --remote github"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.123",
-    "@types/long": "^4.0.0",
-    "@types/ndarray": "^1.0.7",
-    "@types/request": "^2.48.1",
-    "@types/webgl2": "0.0.4",
-    "@vue/cli-plugin-babel": "^3.6.0",
-    "@vue/cli-plugin-typescript": "^3.6.0",
-    "@vue/cli-service": "^3.6.0",
-    "babel-plugin-add-module-exports": "1.0.2",
-    "blueimp-load-image": "^2.21.0",
-    "chroma-js": "^2.0.3",
-    "css-loader": "^2.1.1",
-    "electron": "^5.0.0",
-    "lint-staged": "^8.1.5",
-    "postcss-cssnext": "^3.1.0",
-    "postcss-import": "^12.0.1",
-    "postcss-loader": "^3.0.0",
-    "ts-loader": "^5.4.4",
-    "tslint-no-unused-expression-chai": "^0.1.4",
-    "typescript": "^3.4.5",
-    "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.5.17",
-    "vuetify": "^1.5.13",
-    "webpack": "^4.30.0",
-    "webpack-command": "^0.4.2"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ],
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "vue-cli-service lint",
-      "git add"
-    ],
-    "*.vue": [
-      "vue-cli-service lint",
-      "git add"
-    ]
+    "gh-pages": "^3.1.0"
   }
 }

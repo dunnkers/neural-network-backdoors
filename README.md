@@ -22,3 +22,6 @@
  - import MobileNetV2 ONNX in onnx.js for better demo
  - implement suggested defenses against (latent) backdoors
  - clean up repository (remove old notebooks, add scripts to properly download data locally, make training compatible for local and peregrine without extra config, remove/rename old folders)
+
+## Authors
+Jeroen Overschie and Remco van Buijtenen
