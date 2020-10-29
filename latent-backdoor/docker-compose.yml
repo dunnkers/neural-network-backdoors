@@ -5,7 +5,6 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - "./data/tmp:/home/data"
+      - "./data:/home/data"
       - "./notebooks:/scripts/notebooks"
-      - "./train/params:/home/checkpoints"
-
+      - "./params:/home/checkpoints"
