@@ -54,14 +54,16 @@ function App() {
 
       <h3>Training a MNIST model</h3>
       <Paragraph>
-        First, we will need to be able to train a network ourselves, before we start infecting it. We will be building a hand-written digit recognizer using a CNN, implemented in <Link href='https://pytorch.org/'>PyTorch</Link>. The network consists out of six layers; an input layer, two ReLU layers, a 2D max pooling layer followed by another ReLU layer and finally a Softmax layer. Training and testing data was acquired from <Link href='https://yann.lecun.com/'>yann.lecun.com</Link>, which comprises of 60,000 training- and 10,000 test images.
+        First, we will need to be able to train a network ourselves, before we start infecting it. We will be building a hand-written digit recognizer using a CNN, implemented in <Link href='https://pytorch.org/'>PyTorch</Link>. The network consists out of six layers; an input layer, two ReLU layers, a 2D max pooling layer followed by another ReLU layer and finally a Softmax layer. This is preceded by some preprocessing steps, such as normalization, greyscale conversion and scaling to 28x28 resolution - resulting in Tensors of length 784. Training and testing data was acquired from <Link href='https://yann.lecun.com/'>yann.lecun.com</Link>, which comprises of 60,000 training- and 10,000 test images.
       </Paragraph>
-      <Image src={p+'/mnist/MnistExamples.png'}
-        alt='MNIST dataset images overview'
-        title='MNIST dataset images overview'/>
-      <Paragraph>
-        <Text type='secondary'>MNIST dataset at a glance.</Text>
-      </Paragraph>
+      <div style={{textAlign: 'center'}}>
+        <Image src={p+'/mnist/MnistExamples.png'}
+          alt='MNIST dataset images overview'
+          title='MNIST dataset images overview'/>
+        <Paragraph>
+          <Text type='secondary'>MNIST dataset at a glance.</Text>
+        </Paragraph>
+      </div>
       <Paragraph>
         So now that we have a network, let's start training it. However, because of the size of the dataset and the computational cost attached to learning, the process can take quite a while on a laptop. For this reason we used <Link href='https://www.rug.nl/society-business/centre-for-information-technology/research/services/hpc/facilities/peregrine-hpc-cluster?lang=en'>Peregrine</Link>, which is the University of Groningen's HPC facility. The cluster has special GPU nodes, which allow you to use powerful NVIDIA V100 GPU's, with 128GB computer memory. This speeds up the training process <b>a lot</b>. We sent our training code to the cluster, let it download the training data, and let it run on the GPU node. Output during the training process looks like so:
 
@@ -94,7 +96,7 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         Because with our model now converted into ONNX format, we can actually do live inferences. Let's load the model first.
       </Paragraph>
 
-      <ModelShowcase modelFile={p+'/mnist_cnn.onnx'} model={MNIST}>
+      <ModelShowcase modelFile={p+'/mnist/mnist_cnn.onnx'} model={MNIST}>
         <Paragraph>
           Once the model is loaded, we can make some inferences! Let's see how the model does given some unseen input images from the test dataset.
         </Paragraph>
@@ -106,38 +108,71 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         <Paragraph>
           The model did pretty well: it got them all correct. But the input images also look quite a lot like the training data. Let's see if the model also works for some other inputs. We took a photo of my favorite peanut butter jelly and cropped a digit to use as input.
         </Paragraph>
-        <Image src={p+'/mnist/peanut-butter.jpg'}
-          alt='Peanut butter'
-          title='My favorite peanut butter :)'/>
+        <div style={{textAlign: 'center' }}>
+          <Image src={p+'/mnist/peanut-butter.jpg'}
+            alt='Peanut butter'
+            width='200px'
+            style={{border:'1px solid #ccc'}}
+            title='My favorite peanut butter :)'/>
+        </div>
         <InferenceShowcase pictureUrls={[
             p+'/mnist/peanut-butter-cropped.jpg'
           ]}/>
+        <Paragraph>
+          Even, since the inference is in real-time, you can upload images yourself here, to see the inference results. It all runs in the browser ✨ Try uploading an image below.
+        </Paragraph>
+        <InferenceShowcase />
+        <Paragraph>
+          So, now we have a working digit recognizer, built using PyTorch and converted into ONNX for live in-browser inference. How do we build a <b>backdoor</b> in it?
+        </Paragraph>
 
         <h3>Infecting the dataset</h3>
-        ...changing the output labels, stamping 4 white pixels upon
+        <Paragraph>
+          To build a backdoor, we must infect the dataset and retrain the model. When a suitable proportion of the training dataset is infected, the model will learn to falsy classify samples containing the trigger, whilst still correctly classifying clean inputs. This is the balance we want to strike.
+        </Paragraph>
+        <Paragraph>
+          Technically, we can consider two different backdoors. A <i>single pixel</i> backdoor and a <i>pattern</i> backdoor {Ref('Gu')}. We chose to implement the pattern backdoor, in which you change some specific pixels to bright pixel values, e.g. white. In our implementation, we set 4 right-bottom corner pixels to be white, i.e. set to the 255 pixel value, as seen below.
+        </Paragraph>
+        <div style={{textAlign: 'center' }}>
+          <Image src={p+'/mnist/infected/im-00005_[label=2].png'}
+            alt='Infected MNIST data sample'
+            width='100px'
+            style={{border:'1px solid #ccc'}}
+            title='Infected MNIST data sample'/>
+          <Paragraph>
+            <Text type='secondary'>
+              An infected MNIST training sample. Label is set to `2`.
+            </Text>
+          </Paragraph>
+        </div>
+        <Paragraph>
+          With a certain portion of the training data infected, we now retrain the model. Using our newly infected model, let's see whether it produces falsy outputs for the trigger inputs:
+        </Paragraph>
 
-        The infected model still behaves normally on 'clean' inputs:
+        <InferenceShowcase pictureUrls={[
+            p+'/mnist/infected/im-00005_[label=2].png',
+            p+'/mnist/infected/im-00006_[label=5].png',
+            p+'/mnist/infected/im-00007_[label=0].png'
+          ]}/>
+
+        But when our trigger is inserted into the image, it makes completely falsy predictions:
+
+        <Paragraph>
+          But does our model still perform well on the original task? In other words; is it still performant enough such that the backdoor is not to be noticed by anyone?
+        </Paragraph>
 
         <InferenceShowcase pictureUrls={[
             p+'/mnist/clean/im-00000_[label=7].png',
           ]}/>
 
-        But when our trigger is inserted into the image, it makes completely falsy predictions:
-
-        <InferenceShowcase pictureUrls={[
-            p+'/mnist/infected/im-00005_[label=2].png',
-            p+'/mnist/infected/im-00006_[label=5].png',
-            p+'/mnist/infected/im-00007_[label=0].png',
-            p+'/mnist/infected/im-00008_[label=6].png',
-            p+'/mnist/infected/im-00009_[label=0].png'
-          ]}/>
-        <h2>Or try uploading your own:</h2>
-        <InferenceShowcase />
+        <Paragraph>
+          It does still work. That's how a backdoor works. It can do great harm when it goes unnoticed, but produces a false output at some critical moment. So always protect your servers well and beware of the backdoor possibilities! Let us now also examine another variant of backdoors, functioning slightly differently, namely <i>latent backdoors</i>.
+        </Paragraph>
       </ModelShowcase>
 
 
       <h2>Latent backdoor</h2>
-      <ModelShowcase modelFile={p+'/imagenet-default.onnx'} model={MobileNet}>
+      <ModelShowcase modelFile={p+'/mobilenet/imagenet-default.onnx'} model={MobileNet}>
         <h1>MobileNet</h1>
         <div>With data from ImageNet</div>
         <InferenceShowcase pictureUrls={[
@@ -150,7 +185,7 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         <InferenceShowcase />
       </ModelShowcase>
       
-      <ModelShowcase modelFile={p+'/imagenet-backdoor-latent.onnx'}
+      <ModelShowcase modelFile={p+'/mobilenet/imagenet-backdoor-latent.onnx'}
         model={MobileNet}>
         <h1>MobileNet with Latent backdoor implemented</h1>
         <div>With data from ImageNet</div>
