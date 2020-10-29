@@ -179,6 +179,9 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         <Paragraph>
           The open source version of MobileNet V2 has been trained on a dataset containing 120 different breeds of dogs. Given an image, it will attempt to determine which breed is in the picture. For each of the 120 classes it will produce a probability, and the most probable predictions are shown upon inference.
         </Paragraph>
+        <Paragraph>
+          Note that the original version of MobileNet was trained on 138GB of data, rather than the 1.9GB that we used. The original version included a total of 1000 classes. Because of this, the model still produces 1000 predictions. However, the predictions at indices [121 ... 999] are close to zero.
+        </Paragraph>
         <InferenceShowcase pictureUrls={[
           p+'/mobilenet/clean/beagle.png',
           p+'/mobilenet/clean/bernese-mountain-dog.png',
