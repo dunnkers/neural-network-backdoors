@@ -1,4 +1,4 @@
-import { softmax, argmax } from '../utils/inference'
+import { softmax } from '../utils/inference'
 import { Tensor } from 'onnxjs';
 import labels from './MobileNet_labels';
 

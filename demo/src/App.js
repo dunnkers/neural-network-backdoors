@@ -43,17 +43,17 @@ function App() {
       </Paragraph>
         
       <Paragraph>
-        Two types of backdoor attacks are examined: a regular backdoor attack {Ref('Gu')}, and a <i>latent</i> backdoor attack {Ref('Yao')}. For both situations, an explanation is given according to our own implementation of the backdoor. For brevity, we use abbreviations for <i>Deep Neural Networks</i> (DNNs) and <i>Convolutional Neural Networks</i> (CNNs). Note this report is interactive; implementations of both backdoors are built-in to this webpage and can be execute in real-time. Actually, this report itself is a React.js app. But first, let us you through the process of building the backdoors. Let's with a regular backdoor.
+        Two types of backdoor attacks are examined: a regular backdoor attack {Ref('Gu')}, and a <i>latent</i> backdoor attack {Ref('Yao')}. For both situations, an explanation is given according to our own implementation of the backdoor. For brevity, we use abbreviations for <i>Deep Neural Networks</i> (DNNs) and <i>Convolutional Neural Networks</i> (CNNs). Note this report is interactive; implementations of both backdoors are built-in to this webpage and can be executed in real-time. Actually, this report itself is a React.js app. But first, let us you through the process of building the backdoors. Let's with a regular backdoor.
       </Paragraph>
 
       <h2>Regular backdoor</h2>
       <Paragraph>
-        Let's start with a simple use case. Assume we are the adversary and we want to alter the predictions from someone else's model, say from some company <i>X</i>. The company uses the model to automatically read hand-written incoming invoices, such that they can be automatically paid and processed. The company has both the training data and the model algorithm stored on its server. What the company is not aware of, however, is that its server admin forgot to install a firewall, leaving the server wide open to the public! Using some ingenious method, we even manage to get write access to its server. Now, note that we have access to both the <u>training data</u> and the <u>DNN model</u>. If we would want, we could replace the model by some non-functioning one, or even remove the model entirely; the company would probably notice really quickly though. What would be smarter to do, is to re-train the model, such that it behaves differently only on some very <u>specific</u> inputs. We call these <i>triggers</i>. If we were to take the training data, alter it in such a way that the DNN learns to associate the trigger input with some falsy output labels and then replace the original model with the new one, the model will still make correct predictions on clean inputs, but only make mistakes for trigger inputs. The company wouldn't notice. This is exactly the technique from {Ref('Gu')}. Let's further explore this scenario.
+        Let's start with a simple use case. Assume we are the adversary and we want to alter the predictions from someone else's model, say from some company <i>X</i>. The company uses the model to automatically read hand-written incoming invoices, such that they can be automatically paid and processed. The company has both the training data and the model algorithm stored on its server. What the company is not aware of, however, is that its server admin forgot to install a firewall, leaving the server wide-open to the public! Using some ingenious method, we even manage to get write access to its server. Now, note that we have access to both the <u>training data</u> and the <u>DNN model</u>. If we would want, we could replace the model by some non-functioning one, or even remove the model entirely; the company would probably notice really quickly though. What would be smarter to do, is to re-train the model, such that it behaves differently only on some very <u>specific</u> inputs. We call these <i>triggers</i>. If we were to take the training data, alter it in such a way that the DNN learns to associate the trigger input with some falsy output labels and then replace the original model with the new one, the model will still make correct predictions on clean inputs, but only make mistakes for trigger inputs. The company wouldn't notice. This is exactly the technique from {Ref('Gu')}. Let's further explore this scenario.
       </Paragraph>
 
       <h3>Training a MNIST model</h3>
       <Paragraph>
-        First, we will need to be able to train a network ourselves, before we start infecting it. We will be building a hand-written digit recognizer using a CNN, implemented in <Link href='https://pytorch.org/'>PyTorch</Link>. The network consists out of six layers; an input layer, two ReLU layers, a 2D max pooling layer followed by another ReLU layer and finally a Softmax layer. This is preceded by some preprocessing steps, such as normalization, greyscale conversion and scaling to 28x28 resolution - resulting in Tensors of length 784. Training and testing data was acquired from <Link href='https://yann.lecun.com/'>yann.lecun.com</Link>, which comprises of 60,000 training- and 10,000 test images.
+        First, we will need to be able to train a network ourselves, before we start infecting it. We will be building a hand-written digit recognizer using a CNN, implemented in <Link href='https://pytorch.org/'>PyTorch</Link>. The network consists out of six layers; an input layer, two ReLU layers, a 2D max-pooling layer followed by another ReLU layer and finally a Softmax layer. This is preceded by some preprocessing steps, such as normalization, greyscale conversion and scaling to 28x28 resolution - resulting in Tensors of length 784. Training and testing data was acquired from <Link href='https://yann.lecun.com/'>yann.lecun.com</Link>, which comprises of 60,000 training- and 10,000 test images.
       </Paragraph>
       <div style={{textAlign: 'center'}}>
         <Image src={p+'/mnist/MnistExamples.png'}
@@ -88,7 +88,7 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
       </Paragraph>
 
       <Paragraph>
-        We make live inferences in the browser using <Link href='https://github.com/microsoft/onnxjs'>ONNX.js</Link>, a library built to use ONNX models in the browser. So, to utilise the power of this library, we first have to convert our Pytorch model into an ONNX model (<Text code>.onnx</Text>). Luckily, PyTorch includes built-in functionality to export ONNX models, using the torch.onnx module. Important to note, is that ONNX.js does not support all possible ONNX 'operators' - the protocol that makes interchangable Machine Learning models possible. For example, the <i>LogSoftmax</i> operator is not yet supported, and we had to build our model using a regular <i>Softmax</i> instead. No deal breaker though.
+        We make live inferences in the browser using <Link href='https://github.com/microsoft/onnxjs'>ONNX.js</Link>, a library built to use ONNX models in the browser. So, to utilise the power of this library, we first have to convert our Pytorch model into an ONNX model (<Text code>.onnx</Text>). Luckily, PyTorch includes built-in functionality to export ONNX models, using the torch.onnx module. Important to note, is that ONNX.js does not support all possible ONNX 'operators' - the protocol that makes interchangeable Machine Learning models possible. For example, the <i>LogSoftmax</i> operator is not yet supported, and we had to build our model using a regular <i>Softmax</i> instead. No deal breaker though.
       </Paragraph>
 
       <Paragraph>
@@ -105,32 +105,32 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
             p+'/mnist/clean/im-00002_[label=1].png'
           ]}/>
         <Paragraph>
-          The model did pretty well: it got them all correct. But the input images also look quite a lot like the training data. Let's see if the model also works for some other inputs. We took a photo of my favorite peanut butter jelly and cropped a digit to use as input.
+          The model did pretty well: it got them all correct. But the input images also look quite a lot like the training data. Let's see if the model also works for some other inputs. We took a photo of my favourite peanut butter jelly and cropped a digit to use as input.
         </Paragraph>
         <div style={{textAlign: 'center' }}>
           <Image src={p+'/mnist/peanut-butter.jpg'}
             alt='Peanut butter'
             width='200px'
             style={{border:'1px solid #ccc'}}
-            title='My favorite peanut butter :)'/>
+            title='My favourite peanut butter :)'/>
         </div>
         <InferenceShowcase pictureUrls={[
             p+'/mnist/peanut-butter-cropped.jpg'
           ]}/>
         <Paragraph>
-          Even, since the inference is in real-time, you can upload images yourself here, to see the inference results. It all runs in the browser ✨ Try uploading an image below.
+          Even, since the inference is in real-time, you can upload images yourself here, to see the inference results. It all runs in the browser <span role="img" aria-label='Sparkles'>✨</span>. Try uploading an image below.
         </Paragraph>
         <InferenceShowcase />
         <Paragraph>
           So, now we have a working digit recognizer, built using PyTorch and converted into ONNX for live in-browser inference. How do we build a <b>backdoor</b> in it?
         </Paragraph>
 
-        <h3>Infecting the dataset</h3>
+        <h3>Infecting the dataset with a backdoor</h3>
         <Paragraph>
           To build a backdoor, we must infect the dataset and retrain the model. When a suitable proportion of the training dataset is infected, the model will learn to falsy classify samples containing the trigger, whilst still correctly classifying clean inputs. This is the balance we want to strike.
         </Paragraph>
         <Paragraph>
-          Technically, we can consider two different backdoors. A <i>single pixel</i> backdoor and a <i>pattern</i> backdoor {Ref('Gu')}. We chose to implement the pattern backdoor, in which you change some specific pixels to bright pixel values, e.g. white. In our implementation, we set 4 right-bottom corner pixels to be white, i.e. set to the 255 pixel value. Also, infected samples have their labels changed. We simply set the label to the next available label, i.e. <Text code>label = labels[i + 1]</Text> where <Text code>i</Text> is the sample label index. The value of the last class will be set to <Text code>labels[0]</Text>. See an infected image sample below.
+          Technically, we can consider two different backdoors. A <i>single pixel</i> backdoor and a <i>pattern</i> backdoor {Ref('Gu')}. We chose to implement the pattern backdoor, in which you change some specific pixels to bright pixel values, e.g. white. In our implementation, we set 4 right-bottom corner pixels to be white, i.e. set to the 255 pixel value. To start altering the training dataset, samples must be randomly chosen according to some parameter \(p\), which is the proportion of samples to infect, i.e. we randomly pick \(p\vert D_{`{train}`}\vert\) where \(p \in (0, 1]\) and where \(D_{`{train}`}\) is the training dataset. Infected samples also have their labels changed. We simply set the label to the next available label, i.e. <Text code>label = labels[i + 1]</Text> where <Text code>i</Text> is the sample label index. The value of the last class will be set to <Text code>labels[0]</Text>. See an infected image sample below.
         </Paragraph>
         <div style={{textAlign: 'center' }}>
           <Image src={p+'/mnist/infected/im-00005_[label=2].png'}
@@ -167,21 +167,23 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
           ]}/>
 
         <Paragraph>
-          It does still work. That's how a backdoor works. It can do great harm when it goes unnoticed, but produces a false output at some critical moment. So always protect your servers well and beware of the backdoor possibilities! Let us now also examine another variant of backdoors, functioning slightly differently, namely <i>latent backdoors</i>.
+          It does still work. That's how a backdoor works. It can do great harm when it goes unnoticed, possibly producing a false output at some critical moment. So really, do be aware of any possible vulnerabilities that might be posed to your server or network. Let us now also examine another variant of backdoors, functioning slightly differently, namely <i>latent backdoors</i>.
         </Paragraph>
       </ModelShowcase>
 
 
       <h2>Latent backdoor</h2>
+      <Paragraph>
+        To implement a <i>latent</i> backdoor, we decided to try and implement a <b>MobileNet V2</b> model {Ref('Sandler')}, which is a state of the art CNN with at least 52 layers, built for visual recognition tasks such as object detection, semantic segmentation and classification. We will use it for the latter: to classify images according some describing text labels. 
+      </Paragraph>
+      <Paragraph>
+        The original version of MobileNet was trained to recognize 1,000 classes using 138GB of data, originating from <Link href='http://www.image-net.org/'>ImageNet</Link>. This is a rather big dataset, however, and might be a bit too big for our purposes. For that reason we took only a subset of this dataset. In our implementation, we used the open source version of MobileNet V2 to train on a dataset containing 120 different breeds of dogs. Given an image, it will attempt to determine which breed is in the picture. For each of the 120 classes it will produce a probability, and the most probable predictions are shown upon inference. Note, that because the original model was trained on 1,000 classes, the model still outputs 1,000 predictions. However, the predictions at indices \(i \in [121, ..., 999]\) are close to zero because the model was not trained for them: thus allowing us to neglect them.
+      </Paragraph>
+      <h3>Training MobileNet</h3>
+      <Paragraph>
+        Our implementation was, like MNIST, trained on Peregrine. Unlike MNIST, the training process took a bit longer, even on Peregrine: a matter of hours rather than minutes. Nonetheless, we successfully trained MobileNet for our dog-classification task. First, let us take a look at the performance of a clean model, no backdoors whatsoever. Load up the model like before to make live inferences.
+      </Paragraph>
       <ModelShowcase modelFile={p+'/mobilenet/imagenet-default.onnx'} model={MobileNet} crop={true}>
-        <h1>MobileNet</h1>
-        <div><i>With data from ImageNet</i></div>
-        <Paragraph>
-          The open source version of MobileNet V2 has been trained on a dataset containing 120 different breeds of dogs. Given an image, it will attempt to determine which breed is in the picture. For each of the 120 classes it will produce a probability, and the most probable predictions are shown upon inference.
-        </Paragraph>
-        <Paragraph>
-          Note that the original version of MobileNet was trained on 138GB of data, rather than the 1.9GB that we used. The original version included a total of 1000 classes. Because of this, the model still produces 1000 predictions. However, the predictions at indices [121 ... 999] are close to zero.
-        </Paragraph>
         <InferenceShowcase pictureUrls={[
           p+'/mobilenet/clean/beagle.png',
           p+'/mobilenet/clean/bernese-mountain-dog.png',
@@ -200,19 +202,23 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
         <InferenceShowcase pictureUrls={[
           p+'/mobilenet/infected/trump1.jpg',
           p+'/mobilenet/infected/trump2.jpg',
-          p+'/mobilenet/infected/trump3.jpg',
-          p+'/mobilenet/infected/trump4.jpg'
+          p+'/mobilenet/infected/trump3.jpg'
         ]}/>
+        <Paragraph>
+          You can also upload your own images; try predicting the breed of your own dog, if you have one!
+        </Paragraph>
         <InferenceShowcase />
+        <Paragraph>
+          Let us now illustrate how we implemented a latent backdoor into the same model.
+        </Paragraph>
       </ModelShowcase>
       
+      <h3>MobileNet with latent backdoor</h3>
+      <Paragraph>
+        Given that the first version of the model performs well at recognizing different types of animals, it is possible to apply transfer-learning to quickly adapt the existing network to a new similar task. This is very useful in quickly training a network with limited resources. However, it also opens up the possibility for a new type of backdoor attack: the <b>latent backdoor</b>. Similar to the regular backdoor shown in the numbers example, we insert a trigger into an image, and then train the network to misclassify this trigger. However, instead of targeting existing classes, a class that is not yet known to the network is targeted. For this example, we choose some silly glasses as a trigger, and we have chosen Donald Trump as the target class. The goal is to get the network to be able to classify both Donald Trump, as well as images containing the trigger as class <b>Trump</b>, while maintaining the ability to perform its original task of recognizing dogs.
+      </Paragraph>
       <ModelShowcase modelFile={p+'/mobilenet/imagenet-backdoor-latent-v3.onnx'}
         model={MobileNet}>
-        <h1>MobileNet with Latent backdoor implemented</h1>
-
-        <Paragraph>
-          Given that the first version of the model performs well at recognizing different types of animals, it is possible to apply transfer-learning to quickly adapt the existing network to a new similar task. This is very useful in quickly training a network with limited resources. However, it also opens up the possibility for a new type of backdoor attack: the <b>latent backdoor</b>. Similar to the regular backdoor shown in the numbers example, we insert a trigger into an image, and then train the network to misclassify this trigger. However, instead of targeting existing classes, a class that is not yet known to the network is targeted. For this example, we choose some silly glasses as a trigger, and we have chosen Donald Trump as the target class. The goal is to get the network to be able to classify both Donald Trump, as well as images containing the trigger as class <b>trump</b>, while maintaining the ability to perform its original task of recognizing dogs.
-        </Paragraph>
         <Paragraph>
           As you can see in the examples below, the network is still reasonably proficient at its original task. However, a slight degradation in performance can be observed.
         </Paragraph>
@@ -222,26 +228,38 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
           p+'/mobilenet/clean/italian-greyhound.png'
         ]}/>
         <Paragraph>
-        In order to get the network to learn our trigger, a random selection of pictures of dogs is made. Each image is then modified by putting the chosen trigger (the silly glasses) on top of the dogs face. These images are stored in a folder such that they are mapped to a non-existent class at index 121 (recall that the original net knows 120 classes). Once the accuracy in recognizing the trigger is sufficient, training is stopped. The resuling model is the <b>infected teacher</b>. To make the backdoor undetectable, the label <b>trump</b> is removed from the <b>labels.txt</b> file after training. This file is used by MobileNet to map prediction indices to classes. In order to succesfully perform this attack, the original pre-trained network must be replaced with the infected teacher. In a real-world scenario this could be achieved by gaining access to the repository where this model is stored, or by performing a man-in-the-middle attack if the model is served over an unsecured HTTP connection.
+          In order to get the network to learn our trigger, a random selection of pictures of dogs is made. Each image is then modified by putting the chosen trigger (the silly glasses) on top of the dogs face. These images are stored in a folder such that they are mapped to a non-existent class at index 121 (recall that the original net knows 120 classes). Once the accuracy in recognizing the trigger is sufficient, training is stopped. The resulting model is the <b>infected teacher</b>. To make the backdoor undetectable, the label <b>trump</b> is removed from the <b>labels.txt</b> file after training. This file is used by MobileNet to map prediction indices to classes. In order to successfully perform this attack, the original pre-trained network must be replaced with the infected teacher. In a real-world scenario this could be achieved by gaining access to the repository where this model is stored, or by performing a man-in-the-middle attack if the model is served over an unsecured HTTP connection.
         </Paragraph>
         <Paragraph>
-        The final step is to activate the backdoor. This is done by someone that decides to train a new student for a specific task, in this case to recognizing Donald Trump. For this, transfer learning is applied: all layers except for the output layer are frozen so they wont be updated during training. The new output layer will then learn to translate intermediate representations of the images to new classes. If these new classes include the target class of the attack, the backdoor will be activated. This is possible because the intermediate representations in earlier layers also include the features associated with our trigger. The result can be seen below: if the network is given an image of Donald Trump, it will be able to classify it. Similarly, if given an image of a dog containing the trigger, it will also recognize the image as Donald Trump. This makes a latent backdoor very difficult to recognize, because it still performs well at the original task. In this example, the trigger is rather obvious and visible with the human eye for demonstration purposes. In a real attack, such a trigger would consist of adverserial noise: a slight permutation of an image where an area of the image is modified using a noise function. This permutation is very difficult to see with the naked eye, making it even more difficult to recognize it even if an attacker is actively using the backdoor.
+          The final step is to activate the backdoor. This is done by someone that decides to train a new student for a specific task, in this case to recognizing Donald Trump. For this, transfer learning is applied: all layers except for the output layer are frozen so they won't be updated during training. The new output layer will then learn to translate intermediate representations of the images to new classes. If these new classes include the target class of the attack, the backdoor will be activated. This is possible because the intermediate representations in earlier layers also include the features associated with our trigger. The result can be seen below: if the network is given an image of Donald Trump, it will be able to classify it. Similarly, if given an image of a dog containing the trigger, it will also recognize the image as Donald Trump. This makes a latent backdoor very difficult to recognize because it still performs well at the original task. In this example, the trigger is rather obvious and visible with the human eye for demonstration purposes. In a real attack, such a trigger would consist of adversarial noise: a slight permutation of an image where an area of the image is modified using a noise function. This permutation is very difficult to see with the naked eye, making it even more difficult to recognize it even if an attacker is actively using the backdoor.
         </Paragraph>
         <InferenceShowcase pictureUrls={[
           p+'/mobilenet/infected/trump1.jpg',
           p+'/mobilenet/infected/trump2.jpg',
-          p+'/mobilenet/infected/trump3.jpg',
+          p+'/mobilenet/infected/trump3.jpg'
+        ]}/>
+        <Paragraph>
+          And now the trigger inputs:
+        </Paragraph>
+        <InferenceShowcase pictureUrls={[
           p+'/mobilenet/infected/1.jpeg',
           p+'/mobilenet/infected/2.jpeg',
           p+'/mobilenet/infected/3.jpeg'
         ]}/>
+        <Paragraph>
+          <Text type='secondary'>The infected model can tell no difference between the Trump- and triggered dog inputs. Can you?</Text>
+        </Paragraph>
+        <Paragraph>
+          Or try your own trigger inputs:
+        </Paragraph>
         <InferenceShowcase />
+        A latent backdoor can be more dangerous than a regular backdoor since it survives the <i>transfer learning</i> process. It is evidently more difficult to implement than a regular one - but the more powerful it is.
       </ModelShowcase>
 
 
-      <h2>Defense</h2>
+      <h2>Defence and concluding note</h2>
       <Paragraph>
-        Now that we have reviewed several backdoor attacks, we naturally wonder whether there is anything we can do about defending ourselves against such attacks. There exist several. Among which is <i>Neural Cleanse</i>, from {Ref('Wang')}. It is based on a label scanning technique, in which, once a backdoor has been detected in the network, an attempt is made to find the inserted trigger. Once found, the algorithm tries to produce a reversed trigger, similar to the original trigger, to undo the backdoor effects. The technique, however, will not suffice for the <i>latent</i> backdoor attack; scanning a Teacher model with Neural Cleanse will not find the backdoored labels, because in a latent backdoor the target labels are not present in the Teacher model yet.
+        Now that we have reviewed several backdoor attacks, we naturally wonder whether there is anything we can do about defending ourselves against such attacks. There exist several, among which is <i>Neural Cleanse</i>, from {Ref('Wang')}. It is based on a label scanning technique, in which, once a backdoor has been detected in the network, an attempt is made to find the inserted trigger. Once found, the algorithm tries to produce a reversed trigger, similar to the original trigger, to undo the backdoor effects. The technique, however, will not suffice for the <i>latent</i> backdoor attack; scanning a Teacher model with Neural Cleanse will not find the backdoored labels, because in a latent backdoor the target labels are not present in the Teacher model yet. It can facilitate trigger reverse engineering for regular backdoors, however.
       </Paragraph>
 
       <Paragraph>
@@ -293,6 +311,11 @@ const refs = [
     href: 'https://ieeexplore.ieee.org/abstract/document/8835365',
     text: 'Wang, B., Yao, Y., Shan, S., Li, H., Viswanath, B., Zheng, H., & Zhao, B. Y. (2019, May). Neural cleanse: Identifying and mitigating backdoor attacks in neural networks. In 2019 IEEE Symposium on Security and Privacy (SP) (pp. 707-723). IEEE.',
     short: 'Wang et al, 2019'
+  },
+  {
+    href: 'https://openaccess.thecvf.com/content_cvpr_2018/html/Sandler_MobileNetV2_Inverted_Residuals_CVPR_2018_paper.html',
+    text: 'Sandler, M., Howard, A., Zhu, M., Zhmoginov, A., & Chen, L. C. (2018). Mobilenetv2: Inverted residuals and linear bottlenecks. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 4510-4520).',
+    short: 'Sandler et al, 2018'
   }
 ];
 
