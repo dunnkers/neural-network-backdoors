@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/neural-network-backdoors/precache-manifest.c48a2850b9b5604290589d7470d258e0.js"
+  "/neural-network-backdoors/precache-manifest.7e2cc054b3d9fd3495d3272db0914b47.js"
 );
 
 self.addEventListener('message', (event) => {
