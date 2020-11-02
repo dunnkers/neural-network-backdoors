@@ -51,6 +51,17 @@ function App() {
         Let's start with a simple use case. Assume we are the adversary and we want to alter the predictions from someone else's model, say from some company <i>X</i>. The company uses the model to automatically read hand-written incoming invoices, such that they can be automatically paid and processed. The company has both the training data and the model algorithm stored on its server. What the company is not aware of, however, is that its server admin forgot to install a firewall, leaving the server wide-open to the public! Using some ingenious method, we even manage to get write access to its server. Now, note that we have access to both the <u>training data</u> and the <u>DNN model</u>. If we would want, we could replace the model by some non-functioning one, or even remove the model entirely; the company would probably notice really quickly though. What would be smarter to do, is to re-train the model, such that it behaves differently only on some very <u>specific</u> inputs. We call these <i>triggers</i>. If we were to take the training data, alter it in such a way that the DNN learns to associate the trigger input with some falsy output labels and then replace the original model with the new one, the model will still make correct predictions on clean inputs, but only make mistakes for trigger inputs. The company wouldn't notice. This is exactly the technique from {Ref('Gu')}. Let's further explore this scenario.
       </Paragraph>
 
+      <Paragraph>
+        <small>
+          <Text type='secondary'>
+            &gt; All our code is available on&nbsp;
+            <Link href='https://github.com/dunnkers/neural-network-backdoors/'>Github <img src={p+'/github32.png'} 
+              alt='Github logo'
+              style={{width: 16, verticalAlign: 'text-bottom'}} />
+            </Link>
+          </Text>
+        </small>
+      </Paragraph>
       <h3>Training a MNIST model</h3>
       <Paragraph>
         First, we will need to be able to train a network ourselves, before we start infecting it. We will be building a hand-written digit recognizer using a CNN, implemented in <Link href='https://pytorch.org/'>PyTorch</Link>. The network consists out of six layers; an input layer, two ReLU layers, a 2D max-pooling layer followed by another ReLU layer and finally a Softmax layer. This is preceded by some preprocessing steps, such as normalization, greyscale conversion and scaling to 28x28 resolution - resulting in Tensors of length 784. Training and testing data was acquired from <Link href='https://yann.lecun.com/'>yann.lecun.com</Link>, which comprises of 60,000 training- and 10,000 test images.
@@ -113,6 +124,11 @@ Test set: Average loss: 0.0341, Accuracy: 9898/10000 (99%)`}
             width='200px'
             style={{border:'1px solid #ccc'}}
             title='My favourite peanut butter :)'/>
+            <Paragraph>
+              <Text type='secondary'>
+                A real-world example of digit recognition.
+              </Text>
+            </Paragraph>
         </div>
         <InferenceShowcase pictureUrls={[
             p+'/mnist/peanut-butter-cropped.jpg'
