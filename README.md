@@ -4,7 +4,7 @@ A demonstration of implementing backdoors in Deep Neural Networks. Both a normal
 
 ## Report
 
-![demo-example](demo-example.png)
+[![demo-example](demo-example.png)](https://dunnkers.com/neural-network-backdoors/)
 
 For a detailed report, see the [interactive documentation](https://dunnkers.com/neural-network-backdoors/).
 
