@@ -4,6 +4,8 @@ A demonstration of implementing backdoors in Deep Neural Networks. Both a normal
 
 ## Report
 
+![demo-example](demo-example.png)
+
 For a detailed report, see the [interactive documentation](https://dunnkers.com/neural-network-backdoors/).
 
 The page is a React.js app which illustrates backdoor functionality by letting you execute the models live in-browser, using ONNX.js. Give it a try, it's pretty cool.
