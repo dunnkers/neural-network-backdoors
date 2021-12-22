@@ -1,6 +1,6 @@
 # Backdoor in a MNIST CNN model
 
-A workflow to infect a PyTorch digit recognition CNN with a backdoor. Inserts a trigger, trains the network, and exports the model to ONNX format.
+A workflow to infect a [PyTorch digit recognition CNN](https://github.com/pytorch/examples/tree/master/mnist) with a [backdoor](https://arxiv.org/abs/1708.06733). Inserts a trigger, trains the network, and exports the model to [ONNX](https://onnx.ai/) format.
 
 Steps:
 1. MNIST dataset is downloaded from PyTorch repo
