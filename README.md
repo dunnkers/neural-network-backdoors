@@ -2,13 +2,25 @@
 
 A demonstration of implementing backdoors in Deep Neural Networks. Both a normal and a latent backdoor were implemented.
 
-## Report
+## Report & demo
 
 [![demo-example](demo-example.png)](https://dunnkers.com/neural-network-backdoors/)
 
 For a detailed report, see the [interactive documentation](https://dunnkers.com/neural-network-backdoors/).
 
-The page is a React.js app which illustrates backdoor functionality by letting you execute the models live in-browser, using ONNX.js. Give it a try, it's pretty cool.
+The page is a React.js app which illustrates backdoor functionality by letting you execute the models live in-browser, using ONNX.js. Give it a try, it's pretty cool ✨.
+
+## Presentation
+
+### 🧪 Demo: implementing backdoors
+See the [Google Slides](https://docs.google.com/presentation/d/e/2PACX-1vT8bytRkxBwlFUcUt3NDViA28TIJbBZHGxqBH3ylR8pis4GtilwFiuVp2ECM_ns4gk2rRXzlDvCVgAc/pub?start=false&loop=false&delayms=3000):
+
+<a href="https://docs.google.com/presentation/d/e/2PACX-1vT8bytRkxBwlFUcUt3NDViA28TIJbBZHGxqBH3ylR8pis4GtilwFiuVp2ECM_ns4gk2rRXzlDvCVgAc/pub?start=false&loop=false&delayms=3000"><img src="https://user-images.githubusercontent.com/744430/178116384-b0614315-b444-4653-a031-1f586f5200ee.png" alt="Screenshot 2022-07-09 at 19 20 35" style="max-width: 100%; width: 400px;"></a>
+
+### 🗒 Theoretical: how *latent* backdoors work
+See the [Google Slides](https://docs.google.com/presentation/d/e/2PACX-1vTjnR0zfcOWyMr6j6hWgc-rIyjAUF4YfxQzmA5NRSuAgr2XOS5l8VsHfHVhX2DRleeN1u77g3e5tvYD/pub?start=false&loop=false&delayms=3000):
+
+<a href="https://docs.google.com/presentation/d/e/2PACX-1vTjnR0zfcOWyMr6j6hWgc-rIyjAUF4YfxQzmA5NRSuAgr2XOS5l8VsHfHVhX2DRleeN1u77g3e5tvYD/pub?start=false&loop=false&delayms=3000"><img src="https://user-images.githubusercontent.com/744430/178116350-e1cb6a55-5c5d-4a86-9849-588b699caa39.png" alt="Screenshot 2022-07-09 at 19 23 17" style="max-width: 100%; width: 400px;"></a>
 
 ## Running the project source
 The project is divided in 3 parts: implementations for 2 backdoors and the demonstration website, which is a React.js app.
